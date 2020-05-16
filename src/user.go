@@ -47,5 +47,6 @@ func (s *Service) UpdateUser(c *gin.Context) (int, interface{}) {
 		tx.Callback()
 		return s.makeErrJSON(500, 50001, err.Error())
 	}
+	tx.Commit()
 	return s.makeSuccessJSON(json)
 }
