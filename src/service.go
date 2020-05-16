@@ -63,7 +63,7 @@ func (s *Service) initDB() {
 	}
 	fmt.Println("success connect to DB")
 	//自动建表
-	db.AutoMigrate(&User{})
+	db.AutoMigrate(&User{}, &Project{}, &Project_User{})
 
 	s.DB = db
 	//debug模式

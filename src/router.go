@@ -12,24 +12,29 @@ func (s *Service) initRouter() {
 
 	//用户组路由
 	user := r.Group("/user")
+	//创建
 	user.PUT("/", func(c *gin.Context) {
 		c.JSON(s.Registered(c))
 	})
-
-	user.GET("/:userid", func(c *gin.Context) {
+	//获取
+	user.GET("/:Userid", func(c *gin.Context) {
 		c.JSON(s.GetUser(c))
 	})
-
-	user.PUT("/:userid", func(c *gin.Context) {
+	//修改（小程序无法使用PATCH）
+	user.PUT("/:Userid", func(c *gin.Context) {
 		c.JSON(s.UpdateUser(c))
 	})
+	//获取项目列表
+	user.GET("/:Userid/*project", func(c *gin.Context) {
+		c.JSON(s.GetUserProject(c))
+	})
 
-	//
-	////项目组路由
-	//pjt:=r.Group("/project")
-	//
-	////环节组路由
-	//pcs:=r.Group("process")
+	//项目组路由
+	project := r.Group("/project")
+	//创建
+	project.PUT("/", func(c *gin.Context) {
+		c.JSON(s.AddProject(c))
+	})
 
 	s.Router = r
 	err := s.Router.Run(s.Conf.Server.Port)

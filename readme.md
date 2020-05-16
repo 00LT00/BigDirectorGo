@@ -16,7 +16,7 @@ project -> process
 {
     "openid": "123456",
     "username": "asdf",
-    "qqnum": "150521321",
+    "qqnum": "150521321", // 可选
     "avatar":"asdfasdfsa",
    	"phonenum":"13456"
 }
@@ -49,13 +49,13 @@ project -> process
 
 
 
-修改用户信息 PATCH
+修改用户信息 PUT(小程序不支持patch)
 
-示例：PATCH`/user/123456`
+示例：PUT`/user/123456`
 
 ```json
 {
-    "openid": "123456",
+    "openid": "123456", //必选
     "username": "asdf",
     "qqnum": "150521321",
     "phonenum": "13456",
@@ -86,7 +86,7 @@ project -> process
 
 
 
-获取用户参与的项目 GET `/project
+获取用户参与的项目 GET `/project`
 
 
 
