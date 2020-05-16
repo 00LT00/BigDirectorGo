@@ -21,31 +21,31 @@ func (s *Service) Registered(c *gin.Context) (int, interface{}) {
 	return s.makeSuccessJSON(json)
 }
 
-func(s* Service) GetUser(c *gin.Context)(int,interface{}){
-	user:=new(User)
-	userid:=c.Param("userid")
-	if s.DB.Where(User{UserId:userid}).Find(user).RowsAffected!=1{
-		return s.makeErrJSON(404,40400,"none user")
+func (s *Service) GetUser(c *gin.Context) (int, interface{}) {
+	user := new(User)
+	userid := c.Param("userid")
+	if s.DB.Where(&User{UserId: userid}).Find(user).RowsAffected != 1 {
+		return s.makeErrJSON(404, 40400, "none user")
 	}
 	return s.makeSuccessJSON(user)
 }
 
-func(s *Service)UpdateUser(c *gin.Context)(int,interface{}){
-	userid:=c.Param("userid")
-	json:=new(User)
-	if err:=c.ShouldBindJSON(json);err !=nil{
-		s.makeErrJSON(403,40302,err.Error())
+func (s *Service) UpdateUser(c *gin.Context) (int, interface{}) {
+	userid := c.Param("userid")
+	json := new(User)
+	if err := c.ShouldBindJSON(json); err != nil {
+		s.makeErrJSON(403, 40302, err.Error())
 	}
 	if userid != json.UserId {
-		return s.makeErrJSON(403,40303,"openid error")
+		return s.makeErrJSON(403, 40303, "openid error")
 	}
-	if s.DB.Find(User{UserId:userid}).RowsAffected!=1{
-		return s.makeErrJSON(403,40401,"none user")
+	if s.DB.Find(&User{}, User{UserId: userid}).RowsAffected != 1 {
+		return s.makeErrJSON(403, 40401, "none user")
 	}
-		tx:=s.DB.Begin()
-	if err:=tx.Model(&User{}).Updates(json).Error;err!=nil{
+	tx := s.DB.Begin()
+	if err := tx.Model(&User{}).Updates(json).Error; err != nil {
 		tx.Callback()
-		return s.makeErrJSON(500,50001,err.Error())
+		return s.makeErrJSON(500, 50001, err.Error())
 	}
 	return s.makeSuccessJSON(json)
 }
