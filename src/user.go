@@ -30,9 +30,18 @@ func (s *Service) GetUser(c *gin.Context) (int, interface{}) {
 	return s.makeSuccessJSON(user)
 }
 
+//仅用于修改用户时绑定使用
+type UpdateUser struct {
+	UserId   string `form:"openid" binding:"required" json:"openid" gorm:"primary_key;type:varchar(30);not null;unique"`
+	UserName string `form:"username" binding:"-" json:"username" gorm:"not null"`
+	PhoneNum string `form:"phonenum" binding:"-" json:"phonenum" gorm:"not null"`
+	Avatar   string `form:"avatar" binding:"-" json:"avatar" gorm:"not null"`
+	QQnum    string `form:"qqnum" binding:"-" json:"qqnum" gorm:"column:qq_num"`
+}
+
 func (s *Service) UpdateUser(c *gin.Context) (int, interface{}) {
 	userid := c.Param("userid")
-	json := new(User)
+	json := new(UpdateUser)
 	if err := c.ShouldBindJSON(json); err != nil {
 		s.makeErrJSON(403, 40302, err.Error())
 	}
