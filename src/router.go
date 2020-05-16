@@ -17,15 +17,15 @@ func (s *Service) initRouter() {
 		c.JSON(s.Registered(c))
 	})
 	//获取
-	user.GET("/:Userid", func(c *gin.Context) {
+	user.GET("/:userid", func(c *gin.Context) {
 		c.JSON(s.GetUser(c))
 	})
 	//修改（小程序无法使用PATCH）
-	user.PUT("/:Userid", func(c *gin.Context) {
+	user.PUT("/:userid", func(c *gin.Context) {
 		c.JSON(s.UpdateUser(c))
 	})
 	//获取项目列表
-	user.GET("/:Userid/*project", func(c *gin.Context) {
+	user.GET("/:userid/*project", func(c *gin.Context) {
 		c.JSON(s.GetUserProject(c))
 	})
 

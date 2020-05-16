@@ -33,7 +33,7 @@ func (s *Service) Registered(c *gin.Context) (int, interface{}) {
 
 func (s *Service) GetUser(c *gin.Context) (int, interface{}) {
 	user := new(User)
-	userid := c.Param("Userid")
+	userid := c.Param("UserID")
 	if s.DB.Where(&User{UserId: userid}).Find(user).RowsAffected != 1 {
 		return s.makeErrJSON(404, 40400, "none user")
 	}
@@ -50,7 +50,7 @@ type UpdateUser struct {
 }
 
 func (s *Service) UpdateUser(c *gin.Context) (int, interface{}) {
-	userid := c.Param("Userid")
+	userid := c.Param("UserID")
 	json := new(UpdateUser)
 	if err := c.ShouldBindJSON(json); err != nil {
 		return s.makeErrJSON(403, 40302, err.Error())
@@ -71,13 +71,13 @@ func (s *Service) UpdateUser(c *gin.Context) (int, interface{}) {
 }
 
 func (s *Service) GetUserProject(c *gin.Context) (int, interface{}) {
-	userid := c.Param("Userid")
+	userid := c.Param("userid")
 	//返回结果的结构
 	result := struct {
-		Userid      string
+		UserID      string
 		ProjectList []*Project
 	}{
-		Userid: userid,
+		UserID: userid,
 	}
 
 	if err := s.checkUser(userid); err != nil {

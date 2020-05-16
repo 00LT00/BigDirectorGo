@@ -86,7 +86,50 @@ project -> process
 
 
 
-获取用户参与的项目 GET `/project`
+获取用户参与的项目 GET `/user/{{userid}}/project`
+
+示例：GET `/user/123456/project`
+
+```json
+{
+    "data": {
+        "UserID": "123456",
+        "ProjectList": [
+            {
+                "ID": 1,
+                "CreatedAt": "2020-05-17T05:11:59+08:00",
+                "UpdatedAt": "2020-05-17T05:11:59+08:00",
+                "DeletedAt": null,
+                "Userid": "123456",
+                "name": "ads案说法是打发打发、",
+                "ProjectID": "5fbaa6b6-6983-4368-87d0-10a532057dcf"
+            },
+            {
+                "ID": 2,
+                "CreatedAt": "2020-05-17T05:12:07+08:00",
+                "UpdatedAt": "2020-05-17T05:12:07+08:00",
+                "DeletedAt": null,
+                "Userid": "123456",
+                "name": "adsasdf",
+                "ProjectID": "c123c9c9-d8eb-4fa1-b5a4-eaf5adefff45"
+            },
+            {
+                "ID": 4,
+                "CreatedAt": "2020-05-17T05:13:17+08:00",
+                "UpdatedAt": "2020-05-17T05:13:17+08:00",
+                "DeletedAt": null,
+                "Userid": "123456",
+                "name": "ffffffff",
+                "ProjectID": "e6903829-9c63-4323-93cc-4ed055d526de"
+            }
+        ]
+    },
+    "error": 0,
+    "msg": "success"
+}
+```
+
+
 
 
 
