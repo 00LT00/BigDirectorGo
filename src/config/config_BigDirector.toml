@@ -1,0 +1,13 @@
+[Server]
+Port=":12307"
+key="spppk"
+[DB]
+Addr = "localhost"
+User = "director"
+Pass = "akdbJnaKApJfxsrd"
+DBName = "bigdirector"
+[DBDev]
+Addr = "localhost"
+User = "root"
+Pass = "123456"
+DBName = "bigdirector"
