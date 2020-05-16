@@ -10,7 +10,7 @@ func (s *Service) Registered(c *gin.Context) (int, interface{}) {
 
 	err := c.ShouldBindJSON(json)
 	if err != nil {
-		s.makeErrJSON(403, 40301, err.Error())
+		return s.makeErrJSON(403, 40301, err.Error())
 	}
 	tx := s.DB.Begin()
 	if err := tx.Create(json).Error; err != nil {
@@ -43,7 +43,7 @@ func (s *Service) UpdateUser(c *gin.Context) (int, interface{}) {
 	userid := c.Param("userid")
 	json := new(UpdateUser)
 	if err := c.ShouldBindJSON(json); err != nil {
-		s.makeErrJSON(403, 40302, err.Error())
+		return s.makeErrJSON(403, 40302, err.Error())
 	}
 	if userid != json.UserId {
 		return s.makeErrJSON(403, 40303, "openid error")
