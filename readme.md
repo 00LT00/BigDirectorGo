@@ -151,6 +151,35 @@ project -> process
 
 新建项目 PUT
 
+示例: PUT `/project/`
+
+```json
+{
+    "userid": "123456",
+    "name": "ffffffff"
+}
+```
+
+返回结果:
+
+```json
+{
+    "data": {
+        "ID": 4,
+        "CreatedAt": "2020-05-17T05:13:17.3518602+08:00",
+        "UpdatedAt": "2020-05-17T05:13:17.3518602+08:00",
+        "DeletedAt": null,
+        "userid": "123456",
+        "name": "ffffffff",
+        "ProjectID": "e6903829-9c63-4323-93cc-4ed055d526de"
+    },
+    "error": 0,
+    "msg": "success"
+}
+```
+
+
+
 获取项目详情 GET
 
 - 项目id
