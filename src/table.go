@@ -27,6 +27,16 @@ type Project_User struct {
 	gorm.Model
 	UserID    string `gorm:"not null"`
 	ProjectID string `gorm:"not null"`
+	Role      int    `gorm:"not null"`
+}
+
+var RoleTable = map[string]int{
+	"director":  1,
+	"manager":   2,
+	"member":    3,
+	"music":     4,
+	"light":     5,
+	"backstage": 6,
 }
 
 //更改表名

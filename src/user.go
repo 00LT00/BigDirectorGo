@@ -33,7 +33,7 @@ func (s *Service) Registered(c *gin.Context) (int, interface{}) {
 
 func (s *Service) GetUser(c *gin.Context) (int, interface{}) {
 	user := new(User)
-	userid := c.Param("UserID")
+	userid := c.Param("userid")
 	if s.DB.Where(&User{UserId: userid}).Find(user).RowsAffected != 1 {
 		return s.makeErrJSON(404, 40400, "none user")
 	}
@@ -50,7 +50,7 @@ type UpdateUser struct {
 }
 
 func (s *Service) UpdateUser(c *gin.Context) (int, interface{}) {
-	userid := c.Param("UserID")
+	userid := c.Param("userid")
 	json := new(UpdateUser)
 	if err := c.ShouldBindJSON(json); err != nil {
 		return s.makeErrJSON(403, 40302, err.Error())
@@ -72,10 +72,18 @@ func (s *Service) UpdateUser(c *gin.Context) (int, interface{}) {
 
 func (s *Service) GetUserProject(c *gin.Context) (int, interface{}) {
 	userid := c.Param("userid")
+	if c.Param("project") != "/project" {
+		return s.makeErrJSON(403, 40304, "wrong format")
+	}
+	//返回结果的结构
+	type ProjectItem struct {
+		Project
+		DirectorName string
+	}
 	//返回结果的结构
 	result := struct {
 		UserID      string
-		ProjectList []*Project
+		ProjectList []*ProjectItem
 	}{
 		UserID: userid,
 	}
@@ -85,11 +93,22 @@ func (s *Service) GetUserProject(c *gin.Context) (int, interface{}) {
 	}
 	pju := make([]*Project_User, 5, 20)
 	s.DB.Find(&pju, Project_User{UserID: userid})
+
 	for _, v := range pju {
 		//临时存放查询结果
 		project := new(Project)
 		if s.DB.Where(&Project{ProjectID: v.ProjectID}).First(project).RowsAffected == 1 {
-			result.ProjectList = append(result.ProjectList, project)
+			projectitem := new(ProjectItem)
+			projectitem.Project = *project
+			result.ProjectList = append(result.ProjectList, projectitem)
+		}
+	}
+
+	//通过导演id找到导演姓名
+	for _, v := range result.ProjectList {
+		user := new(User)
+		if s.DB.Where(&User{UserId: v.DirectorUserID}).Find(user).RowsAffected == 1 {
+			v.DirectorName = user.UserName
 		}
 	}
 	return s.makeSuccessJSON(result)

@@ -35,6 +35,9 @@ func (s *Service) initRouter() {
 	project.PUT("/", func(c *gin.Context) {
 		c.JSON(s.AddProject(c))
 	})
+	project.GET("/:ProjectID/*UserID", func(c *gin.Context) {
+		c.JSON(s.GetProject(c))
+	})
 
 	s.Router = r
 	err := s.Router.Run(s.Conf.Server.Port)
