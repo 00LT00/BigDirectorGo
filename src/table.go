@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+//用户表
 type User struct {
 	UserId    string `form:"openid" binding:"required" json:"openid" gorm:"primary_key;type:varchar(30);not null;unique"`
 	UserName  string `form:"username" binding:"required" json:"username" gorm:"not null"`
@@ -16,30 +17,39 @@ type User struct {
 	DeletedAt *time.Time
 }
 
+//项目表
 type Project struct {
 	gorm.Model
-	DirectorUserID string `form:"UserID" json:"userid" binding:"required" gorm:"not null"`
+	DirectorUserID string `form:"userid" json:"userid" binding:"required" gorm:"not null"`
 	Name           string `form:"name" json:"name" binding:"required" gorm:"not null"`
 	ProjectID      string `binding:"-" gorm:"not null;unique;unique_index;type:varchar(40)"`
 }
 
+//权限表
 type Project_User struct {
 	gorm.Model
-	UserID    string `gorm:"not null"`
-	ProjectID string `gorm:"not null"`
-	Role      int    `gorm:"not null"`
+	UserID    string `gorm:"not null" json:"userid" form:"userid" binding:"required"`
+	ProjectID string `gorm:"not null" json:"projectid" form:"projectid" binding:"required"`
+	Role      int    `gorm:"not null" json:"-" form:"-"`
 }
-
-var RoleTable = map[string]int{
-	"director":  1,
-	"manager":   2,
-	"member":    3,
-	"music":     4,
-	"light":     5,
-	"backstage": 6,
-}
-
 //更改表名
 func (Project_User) TableName() string {
 	return "project_user"
 }
+
+//数据字典
+var RoleTable = map[interface{}]interface{}{
+	"director":    1,
+	"manager":     2,
+	"member":      3,
+	"music":       4,
+	"light":       5,
+	"backstage":   6,
+	1:	"director"	,
+	2:	"manager" 	,
+	3:	"member"  	,
+	4:	"music"   	,
+	5:	"light"   	,
+	6:	"backstage"	,
+}
+

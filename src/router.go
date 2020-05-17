@@ -35,8 +35,17 @@ func (s *Service) initRouter() {
 	project.PUT("/", func(c *gin.Context) {
 		c.JSON(s.AddProject(c))
 	})
-	project.GET("/:ProjectID/*UserID", func(c *gin.Context) {
+	//获取详情
+	project.GET("/:projectid/*userid", func(c *gin.Context) {
 		c.JSON(s.GetProject(c))
+	})
+	//增加成员
+	project.POST("/", func(c *gin.Context) {
+		c.JSON(s.AddMember(c))
+	})
+	//更改
+	project.PUT("/:projectid/*userid", func(c *gin.Context) {
+		c.JSON(s.UpdateProject(c))
 	})
 
 	s.Router = r
