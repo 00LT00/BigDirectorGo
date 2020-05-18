@@ -193,16 +193,43 @@ project -> process
 
 
 
-获取项目详情 GET
+获取项目详情 GET`/project/{{projectid}}/{{userid}}`
 
-- 项目id
-- 项目名
-- 项目创建日期
-- 项目导演姓名
-- 项目中人员总个数(含导演)、负责人个数(不含导演)、和非负责人个数
-- 项目的环节
+示例：GET`/project/9dc83213-7a2e-42f6-8337-dfcb07b9062a/123456`
 
-修改项目信息 PATCH
+```json
+{
+    "data": {
+        "ID": 1,
+        "CreatedAt": "2020-05-17T14:42:55+08:00",
+        "UpdatedAt": "2020-05-17T14:42:55+08:00",
+        "DeletedAt": null,
+        "userid": "123456",
+        "name": "ffffffff", //项目名称
+        "ProjectID": "9dc83213-7a2e-42f6-8337-dfcb07b9062a",
+        "Role": 0
+    },
+    "error": 0,
+    "msg": "success"
+}
+```
+
+- 项目的环节 还没做
+
+修改项目信息 PUT `/project/{{projectid}}/{{userid}}`   //userid是当前操作的用户的id
+
+示例：PUT `/project/4d8629ef-e7d2-422a-b7af-3dd85437f7cc/111111` 
+
+111111用户将导演转给了123456用户，前提是111111是项目的原导演，123456是成员
+
+```json
+{
+    "userid": "123456",
+    "name": "00000"
+}
+```
+
+
 
 获取项目的所有成员 GET `/user`
 
