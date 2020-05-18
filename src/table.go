@@ -45,11 +45,13 @@ var RoleTable = map[interface{}]interface{}{
 	"music":       4,
 	"light":       5,
 	"backstage":   6,
+	"prop":		   7,
 	1:	"director"	,
 	2:	"manager" 	,
 	3:	"member"  	,
 	4:	"music"   	,
 	5:	"light"   	,
 	6:	"backstage"	,
+	7:	"prop"		,
 }
 
