@@ -10,7 +10,7 @@ project -> process
 
 ## 用户 `/user`
 
-注册用户  PUT
+注册用户  PUT `/user/`
 
 ```json
 {
