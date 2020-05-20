@@ -7,6 +7,9 @@ import (
 )
 
 //验证项目是否存在，或者返回权限
+// -1 只检测项目是否存在的返回值，无报错就是项目存在
+//  0 无关人员
+
 func (s *Service) checkProject(projectid string, userid ...string) (int, error) {
 	if s.DB.Find(&Project{}, Project{ProjectID: projectid}).RowsAffected == 0 {
 		//项目不存在
@@ -58,6 +61,14 @@ func (s *Service) AddMember(c *gin.Context) (int, interface{}){
 	if err:=c.ShouldBindJSON(pju);err!=nil{
 		return s.makeErrJSON(403,40307,err.Error())
 	}
+	role,err:=s.checkProject(pju.ProjectID,pju.UserID)
+	if err != nil {
+		return s.makeErrJSON(404,40402,err.Error())
+	}
+	if  1<=role && role<=6 {
+		return s.makeErrJSON(403,40308,errors.New("Already bound"))
+	}
+
 	pju.Role = RoleTable["member"].(int)
 	tx:=s.DB.Begin()
 	if err := tx.Create(pju).Error; err != nil {

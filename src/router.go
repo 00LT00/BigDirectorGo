@@ -40,7 +40,7 @@ func (s *Service) initRouter() {
 		c.JSON(s.GetProject(c))
 	})
 	//增加成员
-	project.POST("/", func(c *gin.Context) {
+	project.POST("/member/", func(c *gin.Context) {
 		c.JSON(s.AddMember(c))
 	})
 	//更改
