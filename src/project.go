@@ -15,7 +15,7 @@ func (s *Service) checkProject(projectid string, userid ...string) (int, error) 
 		//项目不存在
 		return -1, errors.New("none project")
 	}
-	//没有userid的参数
+	//没有userid的参数,表示项目存在
 	if userid == nil {
 		return -1, nil
 	}
@@ -23,7 +23,7 @@ func (s *Service) checkProject(projectid string, userid ...string) (int, error) 
 	pju := new(Project_User)
 	if s.DB.Where(&Project_User{ProjectID: projectid, UserID: userid[0]}).
 		Find(pju).RowsAffected == 0 {
-		return -1, errors.New("limited access")
+		return 0, errors.New("limited access")
 	}
 	return pju.Role, nil
 }
@@ -56,24 +56,24 @@ func (s *Service) AddProject(c *gin.Context) (int, interface{}) {
 	return s.makeSuccessJSON(project)
 }
 
-func (s *Service) AddMember(c *gin.Context) (int, interface{}){
-	pju:=new(Project_User)
-	if err:=c.ShouldBindJSON(pju);err!=nil{
-		return s.makeErrJSON(403,40307,err.Error())
+func (s *Service) AddMember(c *gin.Context) (int, interface{}) {
+	pju := new(Project_User)
+	if err := c.ShouldBindJSON(pju); err != nil {
+		return s.makeErrJSON(403, 40307, err.Error())
 	}
-	role,err:=s.checkProject(pju.ProjectID,pju.UserID)
-	if err != nil {
-		return s.makeErrJSON(404,40402,err.Error())
+	role, err := s.checkProject(pju.ProjectID, pju.UserID)
+	if role == -1 && err != nil {
+		return s.makeErrJSON(404, 40402, err.Error())
 	}
-	if  1<=role && role<=6 {
-		return s.makeErrJSON(403,40308,errors.New("Already bound"))
+	if 1 <= role && role <= 6 {
+		return s.makeErrJSON(403, 40308, errors.New("Already bound"))
 	}
 
 	pju.Role = RoleTable["member"].(int)
-	tx:=s.DB.Begin()
+	tx := s.DB.Begin()
 	if err := tx.Create(pju).Error; err != nil {
 		tx.Callback()
-		return s.makeErrJSON(500,50006,err.Error())
+		return s.makeErrJSON(500, 50006, err.Error())
 	}
 	tx.Commit()
 	return s.makeSuccessJSON(pju)
@@ -98,25 +98,25 @@ func (s *Service) GetProject(c *gin.Context) (int, interface{}) {
 }
 
 func (s *Service) UpdateProject(c *gin.Context) (int, interface{}) {
-	ProjectID:=c.Param("projectid")
-	UserID:=c.Param("userid")[1:] //路由匹配会把‘/’也放进来，必须做处理
-	project:=new(Project)
-	if err:=c.ShouldBindJSON(project);err!=nil{
-		return s.makeErrJSON(403,40303, err.Error())
+	ProjectID := c.Param("projectid")
+	UserID := c.Param("userid")[1:] //路由匹配会把‘/’也放进来，必须做处理
+	project := new(Project)
+	if err := c.ShouldBindJSON(project); err != nil {
+		return s.makeErrJSON(403, 40303, err.Error())
 	}
 	//如果不改导演
 	if project.DirectorUserID == UserID {
-		role,err:= s.checkProject(ProjectID,UserID)
+		role, err := s.checkProject(ProjectID, UserID)
 		if err != nil {
-			return s.makeErrJSON(403,40304,err.Error())
+			return s.makeErrJSON(403, 40304, err.Error())
 		}
-		if role !=1 {
-			return s.makeErrJSON(403,40305,"not director")
+		if role != 1 {
+			return s.makeErrJSON(403, 40305, "not director")
 		}
-		tx:=s.DB.Begin()
-		if err:=tx.Model(&Project{}).Updates(project).Error;err!=nil {
+		tx := s.DB.Begin()
+		if err := tx.Model(&Project{}).Updates(project).Error; err != nil {
 			tx.Callback()
-			return s.makeErrJSON(500,50002,err.Error())
+			return s.makeErrJSON(500, 50002, err.Error())
 		}
 		tx.Commit()
 		return s.makeSuccessJSON(project)
@@ -124,26 +124,53 @@ func (s *Service) UpdateProject(c *gin.Context) (int, interface{}) {
 	//如果导演改了，要判断新导演是否有权限，同时更改项目表和权限表
 
 	//验证用户和项目的关系
-	if _,err:=s.checkProject(ProjectID,project.DirectorUserID);err != nil { // 这里directoruserid指的是从json发过来的，应该是修改后的userid，作者懒得改字段了，凑活看
-		return s.makeErrJSON(403,40306,err.Error())
+	if _, err := s.checkProject(ProjectID, project.DirectorUserID); err != nil { // 这里directoruserid指的是从json发过来的，应该是修改后的userid，作者懒得改字段了，凑活看
+		return s.makeErrJSON(403, 40306, err.Error())
 	}
-	tx:=s.DB.Begin()
-	if err:=tx.Model(&Project{}).Updates(project).Error;err!=nil {
+	tx := s.DB.Begin()
+	if err := tx.Model(&Project{}).Updates(project).Error; err != nil {
 		tx.Callback()
-		return s.makeErrJSON(500,50003,err.Error())
+		return s.makeErrJSON(500, 50003, err.Error())
 	}
-	if err:=tx.Model(&Project_User{}).
-		Where(Project_User{ProjectID:ProjectID,UserID:UserID}).  //选择正在使用的帐号（原导演）
-		Update(Project_User{Role:RoleTable["member"].(int)}).Error;err!=nil{ // 权限降为 member
+	if err := tx.Model(&Project_User{}).
+		Where(Project_User{ProjectID: ProjectID, UserID: UserID}).                //选择正在使用的帐号（原导演）
+		Update(Project_User{Role: RoleTable["member"].(int)}).Error; err != nil { // 权限降为 member
 		tx.Callback()
-		return s.makeErrJSON(500,50004,err.Error())
+		return s.makeErrJSON(500, 50004, err.Error())
 	}
-	if err:=tx.Model(&Project_User{}).
-		Where(Project_User{ProjectID:ProjectID,UserID:project.DirectorUserID}).  //json中的新导演
-		Update(Project_User{Role:RoleTable["director"].(int)}).Error;err!=nil{ // 权限升为 director
+	if err := tx.Model(&Project_User{}).
+		Where(Project_User{ProjectID: ProjectID, UserID: project.DirectorUserID}).  //json中的新导演
+		Update(Project_User{Role: RoleTable["director"].(int)}).Error; err != nil { // 权限升为 director
 		tx.Callback()
-		return s.makeErrJSON(500,50005,err.Error())
+		return s.makeErrJSON(500, 50005, err.Error())
 	}
 	tx.Commit()
 	return s.makeSuccessJSON(project)
+}
+
+//获取当前项目的所有成员
+func (s *Service) GetProjectUser(c *gin.Context) (int, interface{}) {
+	userid := c.Query("userid")
+	projectid := c.Query("projectid")
+	role, err := s.checkProject(projectid, userid)
+	if err != nil {
+		return s.makeErrJSON(403, 40309, err.Error())
+	}
+	if role <= 0 || role > 6 {
+		return s.makeErrJSON(403, 40310, "none role")
+	}
+	type member struct {
+		UserID   string
+		UserName string
+		Role     int
+	}
+	members := make([]*member, 50, 100)
+	err = s.DB.Table("project_user").
+		Select("project_user.user_id,users.user_name,project_user.role").
+		Joins("left join users on project_user.user_id = users.user_id").
+		Where(&Project_User{ProjectID: projectid}).Scan(&members).Error
+	if err != nil {
+		return s.makeErrJSON(500, 50007, err.Error())
+	}
+	return s.makeSuccessJSON(members)
 }
