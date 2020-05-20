@@ -229,9 +229,53 @@ project -> process
 }
 ```
 
+为项目增加成员 POST `/member/`
+示例 `/project/member/` 默认权限为3
+```json
+{
+    "userid": "111111",
+    "projectid": "c9c6ce1b-b581-4815-9788-5cc413640ac8"
+}
+```
+返回结果：
+```json
+{
+    "data": {
+        "ID": 22,
+        "CreatedAt": "2020-05-20T23:47:53.1962117+08:00",
+        "UpdatedAt": "2020-05-20T23:47:53.1962117+08:00",
+        "DeletedAt": null,
+        "userid": "111111",
+        "projectid": "c9c6ce1b-b581-4815-9788-5cc413640ac8"
+    },
+    "error": 0,
+    "msg": "success"
+}
+```
 
 
-获取项目的所有成员 GET `/user`
+
+获取项目的所有成员 GET `/{{userid=?}}&{{projectid=}}`
+示例  `/project/?userid=111111&projectid=c9c6ce1b-b581-4815-9788-5cc413640ac8` //这里userid指的是执行此操作的用户id
+返回结果：
+```json
+{
+    "data": [
+        {
+            "UserID": "12111",
+            "UserName": "wzl",
+            "Role": 3
+        },
+        {
+            "UserID": "123456",
+            "UserName": "asdf",
+            "Role": 1
+        }
+    ],
+    "error": 0,
+    "msg": "success"
+}
+```
 
 - 标识用户的权限
 

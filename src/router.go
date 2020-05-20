@@ -43,6 +43,7 @@ func (s *Service) initRouter() {
 	project.POST("/member/", func(c *gin.Context) {
 		c.JSON(s.AddMember(c))
 	})
+	// 获取项目的用户
 	project.GET("/", func(c *gin.Context) {
 		c.JSON(s.GetProjectUser(c))
 	})
