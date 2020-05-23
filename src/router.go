@@ -58,8 +58,15 @@ func (s *Service) initRouter() {
 		c.JSON(s.UpdateProject(c))
 	})
 
+	//推送服务的路由组
+	send := r.Group("/send")
+	send.POST("/", func(c *gin.Context) {
+		c.JSON(s.ActionStart(c))
+	})
+
 	/*测试区*/
 	//fmt.Println(s.GetOpenID("043VcuII1MHmF30qFcGI1YM5II1VcuI3"))
+	//fmt.Println(s.GetToken())
 	/**/
 
 	s.Router = r

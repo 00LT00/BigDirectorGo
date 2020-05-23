@@ -14,7 +14,7 @@ type Service struct {
 	DB     *gorm.DB
 	Router *gin.Engine
 	Conf   conf
-	Redis  *redis.Client
+	Client *redis.Client
 }
 
 type conf struct {
@@ -104,7 +104,7 @@ func (s *Service) initRedis() {
 	}
 	//fmt.Println(pong, err)
 	// Output: PONG <nil>
-	s.Redis = client
+	s.Client = client
 }
 
 func (s *Service) makeErrJSON(httpStatusCode int, errCode int, msg interface{}) (int, interface{}) {
