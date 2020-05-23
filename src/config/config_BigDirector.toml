@@ -11,3 +11,7 @@ Addr = "localhost"
 User = "root"
 Pass = "123456"
 DBName = "bigdirector"
+[Redis]
+Addr = "localhost:6379"
+Pass = ""
+DB = 0

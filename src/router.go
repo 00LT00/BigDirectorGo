@@ -10,6 +10,12 @@ func (s *Service) initRouter() {
 	//校验码和cors头
 	r.Use(cors.Default(), s.Check())
 
+	//获取用户的openid
+	openid := r.Group("/openid")
+	openid.GET("/:code", func(c *gin.Context) {
+		c.JSON(s.OpenID(c))
+	})
+
 	//用户组路由
 	user := r.Group("/user")
 	//创建
@@ -51,6 +57,10 @@ func (s *Service) initRouter() {
 	project.PUT("/:projectid/*userid", func(c *gin.Context) {
 		c.JSON(s.UpdateProject(c))
 	})
+
+	/*测试区*/
+	//fmt.Println(s.GetOpenID("043VcuII1MHmF30qFcGI1YM5II1VcuI3"))
+	/**/
 
 	s.Router = r
 	err := s.Router.Run(s.Conf.Server.Port)

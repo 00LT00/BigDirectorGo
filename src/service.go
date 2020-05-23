@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/BurntSushi/toml"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"os"
@@ -13,6 +14,7 @@ type Service struct {
 	DB     *gorm.DB
 	Router *gin.Engine
 	Conf   conf
+	Redis  *redis.Client
 }
 
 type conf struct {
@@ -32,17 +34,33 @@ type conf struct {
 		Pass   string
 		DBName string
 	}
+	Redis struct {
+		Addr string
+		Pass string
+		DB   int
+	}
+	Wx struct {
+		AppID     string
+		AppSecret string
+	}
 }
 
 func (s *Service) init() {
 	s.initConfig()
 	s.initDB()
+	s.initRedis()
 	s.initRouter()
 }
 
 func (s *Service) initConfig() {
 	c := new(conf)
 	_, err := toml.DecodeFile("./config/config_BigDirector.toml", c)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+	// 	加载小程序id和认证密钥
+	_, err = toml.DecodeFile("./config/weixin.toml", c)
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
@@ -69,6 +87,24 @@ func (s *Service) initDB() {
 	//debug模式
 	s.DB = s.DB.Debug()
 
+}
+
+func (s *Service) initRedis() {
+	client := redis.NewClient(&redis.Options{
+		Addr:     s.Conf.Redis.Addr,
+		Password: s.Conf.Redis.Pass,
+		DB:       s.Conf.Redis.DB, // use default DB
+	})
+	ctx := client.Context()
+
+	_, err := client.Ping(ctx).Result()
+	if err != nil {
+		fmt.Println("redis", err.Error())
+		panic(err)
+	}
+	//fmt.Println(pong, err)
+	// Output: PONG <nil>
+	s.Redis = client
 }
 
 func (s *Service) makeErrJSON(httpStatusCode int, errCode int, msg interface{}) (int, interface{}) {
