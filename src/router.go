@@ -53,9 +53,13 @@ func (s *Service) initRouter() {
 	project.GET("/", func(c *gin.Context) {
 		c.JSON(s.GetProjectUser(c))
 	})
-	//更改
-	project.PUT("/:projectid/*userid", func(c *gin.Context) {
-		c.JSON(s.UpdateProject(c))
+	//更改项目名
+	project.PUT("/pnm/:projectid", func(c *gin.Context) {
+		c.JSON(s.UpdateProjectName(c))
+	})
+	//更改导演
+	project.PUT("/uid/:projectid", func(c *gin.Context) {
+		c.JSON(s.UpdateProjectUserid(c))
 	})
 
 	//推送服务的路由组
