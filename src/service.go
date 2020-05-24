@@ -112,5 +112,5 @@ func (s *Service) makeErrJSON(httpStatusCode int, errCode int, msg interface{}) 
 }
 
 func (s *Service) makeSuccessJSON(data interface{}) (int, interface{}) {
-	return 200, &gin.H{"error": 0, "msg": "success", "data": data}
+	return 200, &gin.H{"error": 0, "msg": "success", "Data": data}
 }

@@ -35,48 +35,21 @@ func (s *Service) ActionStart(c *gin.Context) (int, interface{}) {
 		return s.makeErrJSON(403, 40301, err.Error())
 	}
 
-	userid:=start_map.Userid
-	projectid:=start_map.Projectid
+	userid := start_map.Userid
+	projectid := start_map.Projectid
 
 	//权限检查
-	role,err:=s.checkProject(projectid,userid)
+	role, err := s.checkProject(projectid, userid)
 	if err != nil {
-		return s.makeErrJSON(403,40301,err.Error())
+		return s.makeErrJSON(403, 40301, err.Error())
 	}
 	if role != 1 {
-		return s.makeErrJSON(403,40301,"limited access")
+		return s.makeErrJSON(403, 40301, "limited access")
 	}
 
 	//获取项目所有人员
-	users := make([]Project_User,50,100) // 其实写不写大小，在做完find后自动就更改了，作者懒的改了
-	s.DB.Where(&Project_User{ProjectID:projectid}).Find(&users)
-
-	//活动标题
-	arr:= [6]string{"节目","互动","颁奖","致辞","开场","结束"}
-	var name string
-	if start_map.CurProc.Type == 0 {
-		name=fmt.Sprintf("节目%s即将开始",start_map.CurProc.Name)
-	}else {
-		name=fmt.Sprintf("%S环节即将开始",arr[start_map.CurProc.Type])
-	}
-	//构造发送推送的map
-	sendmap := struct{
-		Touser 	string
-		template_id	string
-		data struct{
-			thing1 string
-			thing5 string
-		}
-	}{
-		template_id:template,
-		data: struct {
-			thing1 string
-			thing5 string
-		}{
-			thing1: name,
-			thing5: fmt.Sprintf("所需话筒：%d个，耳麦：%d个，备注：%s",start_map.CurProc.Mic,start_map.CurProc.Mic_small,start_map.CurProc.Remark),
-		},
-	}
+	users := make([]Project_User, 50, 100) // 其实写不写大小，在做完find后自动就更改了，作者懒的改了
+	s.DB.Where(&Project_User{ProjectID: projectid}).Find(&users)
 
 	//通过这两个方法从连接池中获取一个空的实例，可以实现连接复用，提高性能
 	req := fasthttp.AcquireRequest()
@@ -97,16 +70,16 @@ func (s *Service) ActionStart(c *gin.Context) (int, interface{}) {
 
 	//响应体
 	type resultstruct struct {
-		Userid 	string
+		Userid  string
 		Errcode int64  `json:"errcode"`
 		Errmsg  string `json:"errmsg"`
 	}
-	failed :=make([]*resultstruct,0,20)
+	failed := make([]*resultstruct, 0, 20)
 
 	//阻塞进程
-	wait:=sync.WaitGroup{}
+	wait := sync.WaitGroup{}
 	wait.Add(1)
-	for _,v :=range users{
+	for _, v := range users {
 		/*开始goroutine*/
 		wait.Add(1)
 		go func(userid string) {
@@ -114,25 +87,75 @@ func (s *Service) ActionStart(c *gin.Context) (int, interface{}) {
 				//执行结束时减少阻塞变量
 				wait.Done()
 			}()
+			//活动标题
+			arr := [6]string{"节目", "互动", "颁奖", "致辞", "开场", "结束"}
+			var name string
+			if start_map.CurProc.Type == 0 {
+				name = fmt.Sprintf("节目%s即将开始", start_map.CurProc.Name)
+			} else {
+				name = fmt.Sprintf("%S环节即将开始", arr[start_map.CurProc.Type])
+			}
+			//构造发送推送的map // 不要问我为什么这么写，我也不知道我为什么要一次性套娃全套掉。。。
+			sendmap := struct {
+				Touser      string `json:"touser"`
+				Template_id string `json:"template_id"`
+				Data        struct {
+					Thing1 struct {
+						Value string `json:"value"`
+					} `json:"thing1"`
+					Thing5 struct {
+						Value string `json:"value"`
+					} `json:"thing5"`
+				} `json:"data"`
+			}{
+				Template_id: template,
+				Data: struct {
+					Thing1 struct {
+						Value string `json:"value"`
+					} `json:"thing1"`
+					Thing5 struct {
+						Value string `json:"value"`
+					} `json:"thing5"`
+				}{
+					Thing1: struct {
+						Value string `json:"value"`
+					}{
+						Value: name,
+					},
+					Thing5: struct {
+						Value string `json:"value"`
+					}{
+						Value: fmt.Sprintf("所需话筒：%d个，耳麦：%d个，备注：%s", start_map.CurProc.Mic, start_map.CurProc.Mic_small, start_map.CurProc.Remark),
+					},
+				},
+			}
 			result := new(resultstruct)
 			result.Errcode = 0
 			result.Userid = userid
 
 			//将map转成json
 			sendmap.Touser = userid
-			sendjson, _ := json.Marshal(sendmap)
+			sendjson, err := json.Marshal(sendmap)
+			//fmt.Println(sendmap)
+			//fmt.Println(string(sendjson))
+			if err != nil {
+				result := &resultstruct{Errcode: 50006, Errmsg: err.Error(), Userid: userid}
+				failed = append(failed, result)
+				return
+			}
 			//设置请求体
 			req.SetBody(sendjson)
 			/*向端口请求*/
+			//请求出错的时候重复10次
 			if err := fasthttp.Do(req, resp); err != nil {
-				i:=0
-				for err!=nil||i<=10{
-					err = fasthttp.Do(req, resp);
+				i := 0
+				for err != nil || i <= 10 {
+					err = fasthttp.Do(req, resp)
 					i++
 				}
 				if err != nil {
-					result:= &resultstruct{Errcode: 50005, Errmsg: err.Error(), Userid: userid}
-					failed = append(failed,result)
+					result := &resultstruct{Errcode: 50005, Errmsg: err.Error(), Userid: userid}
+					failed = append(failed, result)
 					return
 				}
 			}
@@ -140,8 +163,8 @@ func (s *Service) ActionStart(c *gin.Context) (int, interface{}) {
 			b := resp.Body()
 			_ = json.Unmarshal(b, &result)
 			if result.Errcode != 0 {
-			//添加到失败名单里
-			failed = append(failed, result)
+				//添加到失败名单里
+				failed = append(failed, result)
 			}
 			return
 		}(v.UserID)
