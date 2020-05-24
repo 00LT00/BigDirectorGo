@@ -14,11 +14,9 @@ type startmap struct {
 	Userid    string `json:"userid"`
 	Projectid string `json:"projectid"`
 	CurProc   struct {
-		Type      int64  `json:"type"`
-		Name      string `json:"name"`
-		Mic       int64  `json:"mic"`
-		Mic_small int64  `json:"mic_small"`
-		Remark    string `json:"remark"`
+		Type  int64  `json:"type"`
+		Name  string `json:"name"`
+		Index int64  `json:"index"`
 	}
 }
 
@@ -91,9 +89,9 @@ func (s *Service) ActionStart(c *gin.Context) (int, interface{}) {
 			arr := [6]string{"节目", "互动", "颁奖", "致辞", "开场", "结束"}
 			var name string
 			if start_map.CurProc.Type == 0 {
-				name = fmt.Sprintf("节目%s即将开始", start_map.CurProc.Name)
+				name = fmt.Sprintf("环节%d-节目-%s", start_map.CurProc.Index, start_map.CurProc.Name)
 			} else {
-				name = fmt.Sprintf("%S环节即将开始", arr[start_map.CurProc.Type])
+				name = fmt.Sprintf("环节%d-%s", start_map.CurProc.Index, arr[start_map.CurProc.Type])
 			}
 			//构造发送推送的map // 不要问我为什么这么写，我也不知道我为什么要一次性套娃全套掉。。。
 			sendmap := struct {
@@ -125,7 +123,7 @@ func (s *Service) ActionStart(c *gin.Context) (int, interface{}) {
 					Thing5: struct {
 						Value string `json:"value"`
 					}{
-						Value: fmt.Sprintf("所需话筒：%d个，耳麦：%d个，备注：%s", start_map.CurProc.Mic, start_map.CurProc.Mic_small, start_map.CurProc.Remark),
+						Value: "该环节即将开始，请相关人员做好准备！",
 					},
 				},
 			}
