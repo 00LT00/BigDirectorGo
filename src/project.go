@@ -114,7 +114,7 @@ func (s *Service) UpdateProject(c *gin.Context) (int, interface{}) {
 			return s.makeErrJSON(403, 40305, "not director")
 		}
 		tx := s.DB.Begin()
-		if err := tx.Model(&Project{}).Updates(project).Error; err != nil {
+		if err := tx.Model(&Project{}).Where(Project{ProjectID: ProjectID}).Updates(&project).Error; err != nil {
 			tx.Callback()
 			return s.makeErrJSON(500, 50002, err.Error())
 		}
@@ -128,7 +128,7 @@ func (s *Service) UpdateProject(c *gin.Context) (int, interface{}) {
 		return s.makeErrJSON(403, 40306, err.Error())
 	}
 	tx := s.DB.Begin()
-	if err := tx.Model(&Project{}).Updates(project).Error; err != nil {
+	if err := tx.Model(&Project{}).Where(Project{ProjectID: ProjectID}).Updates(&project).Error; err != nil {
 		tx.Callback()
 		return s.makeErrJSON(500, 50003, err.Error())
 	}
