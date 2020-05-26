@@ -40,13 +40,13 @@ func (Project_User) TableName() string {
 
 //流程表
 type Process struct {
+	Order       int64  `gorm:"not null" json:"order" binding:"required"`
 	ProcessID   string `gorm:"not null;type:varchar(40)" json:"process_id" binding:"-"` //流程id 自己生成
 	ProcessName string `gorm:"not null" json:"process_name" binding:"required"`
 	ProcessType int64  `gorm:"not null" json:"process_type" binding:"required"`
-	MicHand     int64  `json:"mic_hand" binding:"required"`
-	MicEar      int64  `json:"mic_ear" binding:"required"`
-	Order       int64  `gorm:"not null" json:"order" binding:"required"`
-	Remark      string `json:"remark" binding:"-"` //可选
+	MicHand     int64  `json:"mic_hand" binding:"-"` //可选
+	MicEar      int64  `json:"mic_ear" binding:"-"`  //可选
+	Remark      string `json:"remark" binding:"-"`   //可选
 	ProjectID   string `gorm:"not null" json:"project_id" binding:"required"`
 }
 

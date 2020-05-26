@@ -40,6 +40,7 @@ func (s *Service) AddProject(c *gin.Context) (int, interface{}) {
 	}
 	//生成uuid
 	uuid4 := uuid.New().String()
+	//为了二维码，限制在32位，原本是36位
 	project.ProjectID = uuid4[:len(uuid4)-4]
 	//开启事务
 	tx := s.DB.Begin()

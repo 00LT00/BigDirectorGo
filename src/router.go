@@ -62,6 +62,13 @@ func (s *Service) initRouter() {
 		c.JSON(s.UpdateProjectUserid(c))
 	})
 
+	// 环节路由
+	process := r.Group("/process")
+	//增加环节
+	process.PUT("/:userid", func(c *gin.Context) {
+		c.JSON(s.AddProcess(c))
+	})
+
 	//推送服务的路由组
 	send := r.Group("/send")
 	send.POST("/", func(c *gin.Context) {
