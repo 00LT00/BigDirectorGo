@@ -38,7 +38,7 @@ func (Project_User) TableName() string {
 	return "project_user"
 }
 
-//流程表
+//环节表
 type Process struct {
 	Order       int64  `gorm:"not null" json:"order" binding:"required"`
 	ProcessID   string `gorm:"not null;type:varchar(40)" json:"process_id" binding:"-"` //流程id 自己生成

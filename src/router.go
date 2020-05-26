@@ -68,6 +68,14 @@ func (s *Service) initRouter() {
 	process.PUT("/:userid", func(c *gin.Context) {
 		c.JSON(s.AddProcess(c))
 	})
+	//获取
+	process.GET("/", func(c *gin.Context) {
+		c.JSON(s.GetProcess(c))
+	})
+	//修改
+	process.POST("/:userid", func(c *gin.Context) {
+		c.JSON(s.UpdateProcess(c))
+	})
 
 	//推送服务的路由组
 	send := r.Group("/send")
