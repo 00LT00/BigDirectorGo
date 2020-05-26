@@ -39,7 +39,8 @@ func (s *Service) AddProject(c *gin.Context) (int, interface{}) {
 		return s.makeErrJSON(404, 40400, err.Error())
 	}
 	//生成uuid
-	project.ProjectID = uuid.New().String()
+	uuid4 := uuid.New().String()
+	project.ProjectID = uuid4[:len(uuid4)-4]
 	//开启事务
 	tx := s.DB.Begin()
 	//新建项目
