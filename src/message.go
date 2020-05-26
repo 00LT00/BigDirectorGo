@@ -86,12 +86,11 @@ func (s *Service) ActionStart(c *gin.Context) (int, interface{}) {
 				wait.Done()
 			}()
 			//活动标题
-			arr := [6]string{"节目", "互动", "颁奖", "致辞", "开场", "结束"}
 			var name string
 			if start_map.CurProc.Type == 0 {
 				name = fmt.Sprintf("环节%d-节目-%s", start_map.CurProc.Index, start_map.CurProc.Name)
 			} else {
-				name = fmt.Sprintf("环节%d-%s", start_map.CurProc.Index, arr[start_map.CurProc.Type])
+				name = fmt.Sprintf("环节%d-%s", start_map.CurProc.Index, ProcessTypeArr[start_map.CurProc.Type])
 			}
 			//构造发送推送的map // 不要问我为什么这么写，我也不知道我为什么要一次性套娃全套掉。。。
 			sendmap := struct {
