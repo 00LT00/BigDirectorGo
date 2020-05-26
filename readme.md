@@ -279,8 +279,6 @@ project -> process
 
 - 标识用户的权限
 
-新建负责人 PUT
-
 
 
 
@@ -289,10 +287,105 @@ project -> process
 
 ## 环节 `/process`
 
-新建环节 PUT
+- 新建环节 PUT `/process/{{userid}}`
 
-获取环节详情 GET
+示例 `/process/123456`
 
-修改环节信息 PATCH
+```json
+{
+    "process_id": "", //无效字段，填不填任意，id自动生成，以返回值为主
+    "process_name": "结束",
+    "process_type": 6,
+    "order": 10,
+    "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a",
+    "mic_hand": 20, // 可选
+    "mic_ear": 3, // 可选
+    "remark": "asdfasgsgageaasdfasd" //可选
+}
+```
+
+返回值
+
+```json
+{
+    "data": {
+        "order": 10,
+        "process_id": "9a821cbe-2715-4bed-a883-789ff45b6b5d",
+        "process_name": "结束",
+        "process_type": 6,
+        "mic_hand": 20,
+        "mic_ear": 3,
+        "remark": "asdfasgsgageaasdfasd",
+        "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+    },
+    "error": 0,
+    "msg": "success"
+}
+```
+
+
+
+- 获取环节详情 GET `/process/{{userid = }}&{{processid = }}`
+
+示例 `/process/?processid=e2e6f9a9-6506-45cb-af0a-2eee881ebfef&userid=12111`
+
+返回
+
+```json
+{
+    "data": {
+        "order": 5,
+        "process_id": "e2e6f9a9-6506-45cb-af0a-2eee881ebfef",
+        "process_name": "开始",
+        "process_type": 1,
+        "mic_hand": 20,
+        "mic_ear": 0,
+        "remark": "",
+        "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+    },
+    "error": 0,
+    "msg": "success"
+}
+```
+
+
+
+修改环节信息 POST `/process/{{userid}}`
+
+示例 `/process/12111`
+
+注：如果和数据库中一样，也会返回500的错误，所以如果实际未发生更改则不要请求，或者进行判断，或者写issues我改。。。
+
+```json
+{//是否可选和增加环节完全一样
+    "process_id": "81da80b8-7f4e-43b8-9d8d-2fa5bb15c7a1",//必须要有
+    "process_name": "环节",
+    "process_type": 3,
+    "order": 5,
+    "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a",
+    "mic_hand": 20
+}
+```
+
+返回
+
+```json
+{
+    "data": {
+        "order": 5,
+        "process_id": "81da80b8-7f4e-43b8-9d8d-2fa5bb15c7a1",
+        "process_name": "环节",
+        "process_type": 3,
+        "mic_hand": 20,
+        "mic_ear": 0,
+        "remark": "",
+        "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+    },
+    "error": 0,
+    "msg": "success"
+}
+```
+
+
 
 新建环节负责人 PUT
