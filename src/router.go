@@ -42,7 +42,7 @@ func (s *Service) initRouter() {
 		c.JSON(s.AddProject(c))
 	})
 	//获取详情
-	project.GET("/:projectid/*userid", func(c *gin.Context) {
+	project.GET("/", func(c *gin.Context) {
 		c.JSON(s.GetProject(c))
 	})
 	//增加成员
@@ -50,7 +50,7 @@ func (s *Service) initRouter() {
 		c.JSON(s.AddMember(c))
 	})
 	// 获取项目的用户
-	project.GET("/", func(c *gin.Context) {
+	project.GET("/user/", func(c *gin.Context) {
 		c.JSON(s.GetProjectUser(c))
 	})
 	//更改项目名
@@ -60,6 +60,10 @@ func (s *Service) initRouter() {
 	//更改导演
 	project.PUT("/uid/:projectid", func(c *gin.Context) {
 		c.JSON(s.UpdateProjectUserid(c))
+	})
+	//查看项目环节
+	project.GET("/process/:projectid", func(c *gin.Context) {
+		c.JSON(s.GetProjectProcess(c))
 	})
 
 	// 环节路由
@@ -83,9 +87,8 @@ func (s *Service) initRouter() {
 		c.JSON(s.ActionStart(c))
 	})
 
-
 	//图片服务
-	file:=r.Group("/picture")
+	file := r.Group("/picture")
 	//静态图片
 	file.GET("/file/:filename", s.GetPicture)
 

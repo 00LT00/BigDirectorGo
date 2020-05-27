@@ -251,8 +251,8 @@ project -> process
 
 
 
-获取项目的所有成员 GET `/{{userid=?}}&{{projectid=}}`
-示例  `/project/?userid=111111&projectid=c9c6ce1b-b581-4815-9788-5cc413640ac8` //这里userid指的是执行此操作的用户id
+获取项目的所有成员 GET `/user/{{userid=?}}&{{projectid=?}}`
+示例  `/project/user/?userid=111111&projectid=c9c6ce1b-b581-4815-9788-5cc413640ac8` //这里userid指的是执行此操作的用户id
 返回结果：
 ```json
 {

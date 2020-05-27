@@ -82,9 +82,8 @@ func (s *Service) AddMember(c *gin.Context) (int, interface{}) {
 }
 
 func (s *Service) GetProject(c *gin.Context) (int, interface{}) {
-	//路由形式 /:ProjectID/*UserID
-	ProjectID := c.Param("projectid")
-	UserID := c.Param("userid")[1:]
+	ProjectID := c.Query("projectid")
+	UserID := c.Query("userid")
 	result := struct {
 		Project
 		Role int
@@ -185,4 +184,15 @@ func (s *Service) GetProjectUser(c *gin.Context) (int, interface{}) {
 		return s.makeErrJSON(500, 50007, err.Error())
 	}
 	return s.makeSuccessJSON(members)
+}
+
+func (s Service) GetProjectProcess(c *gin.Context) (int, interface{}) {
+	project := c.Param("projectid")
+	processes := make([]*Process, 5, 20)
+	err := s.DB.Where(&Process{ProjectID: project}).Find(&processes).Error
+	if err != nil {
+		return s.makeErrJSON(500, 50000, err.Error())
+	}
+
+	return s.makeSuccessJSON(processes)
 }
