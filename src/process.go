@@ -129,3 +129,5 @@ func (s *Service) UpdateProcess(c *gin.Context) (int, interface{}) {
 	tx.Commit()
 	return s.makeSuccessJSON(processes)
 }
+
+//func(s *Service)SetProcesser

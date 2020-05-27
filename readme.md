@@ -210,7 +210,52 @@ project -> process
 }
 ```
 
-- 项目的环节 还没做
+获取项目的环节 GET `/process/{{processid}}`
+
+示例 `/project/process/f3852e84-130a-4ab8-be69-7fae2628ba3a`
+
+返回：
+
+```json
+{
+    "data": [
+        {
+            "order": 5,
+            "process_id": "81da80b8-7f4e-43b8-9d8d-2fa5bb15c7a1",
+            "process_name": "环节",
+            "process_type": 3,
+            "mic_hand": 20,
+            "mic_ear": 0,
+            "remark": "",
+            "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+        },
+        {
+            "order": 5,
+            "process_id": "e2e6f9a9-6506-45cb-af0a-2eee881ebfef",
+            "process_name": "开始",
+            "process_type": 1,
+            "mic_hand": 20,
+            "mic_ear": 0,
+            "remark": "",
+            "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+        },
+        {
+            "order": 10,
+            "process_id": "9a821cbe-2715-4bed-a883-789ff45b6b5d",
+            "process_name": "结束",
+            "process_type": 6,
+            "mic_hand": 20,
+            "mic_ear": 3,
+            "remark": "asdfasgsgageaasdfasd",
+            "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+        }
+    ],
+    "error": 0,
+    "msg": "success"
+}
+```
+
+
 
 修改项目信息 PUT `/project/{{projectid}}/{{userid}}`   //userid是当前操作的用户的id
 
@@ -227,6 +272,7 @@ project -> process
 
 为项目增加成员 POST `/member/`
 示例 `/project/member/` 默认权限为3
+
 ```json
 {
     "userid": "111111",
@@ -280,12 +326,6 @@ project -> process
     "msg": "success"
 }
 ```
-
-- 标识用户的权限
-
-
-
-
 
 
 
@@ -391,7 +431,7 @@ project -> process
 ]
 ```
 
-返回 // processid每次更新都不同，所以每次都要获取
+返回 // processid
 
 ```json
 {
