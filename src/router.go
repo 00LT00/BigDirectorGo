@@ -68,18 +68,22 @@ func (s *Service) initRouter() {
 
 	// 环节路由
 	process := r.Group("/process")
-	//增加环节
-	process.PUT("/:userid", func(c *gin.Context) {
-		c.JSON(s.AddProcess(c))
-	})
+	////增加环节
+	//process.PUT("/:userid", func(c *gin.Context) {
+	//	c.JSON(s.AddProcess(c))
+	//})
 	//获取
 	process.GET("/", func(c *gin.Context) {
 		c.JSON(s.GetProcess(c))
 	})
-	//修改
-	process.POST("/:userid", func(c *gin.Context) {
+
+	process.PUT("/:userid", func(c *gin.Context) {
 		c.JSON(s.UpdateProcess(c))
 	})
+	////修改
+	//process.POST("/:userid", func(c *gin.Context) {
+	//	c.JSON(s.UpdateProcess(c))
+	//})
 
 	//推送服务的路由组
 	send := r.Group("/send")

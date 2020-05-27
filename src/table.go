@@ -41,7 +41,7 @@ func (Project_User) TableName() string {
 //环节表
 type Process struct {
 	Order       int64  `gorm:"not null" json:"order" binding:"required"`
-	ProcessID   string `gorm:"not null;type:varchar(40)" json:"process_id" binding:"-"` //流程id 自己生成
+	ProcessID   string `gorm:"not null;type:varchar(40)" json:"process_id" binding:"required"` //流程id 自己生成
 	ProcessName string `gorm:"not null" json:"process_name" binding:"required"`
 	ProcessType int64  `gorm:"not null" json:"process_type" binding:"required"`
 	MicHand     int64  `json:"mic_hand" binding:"-"` //可选

@@ -346,42 +346,82 @@ project -> process
 
 
 
-修改环节信息 POST `/process/{{userid}}`
+修改环节信息 PUT `/process/{{userid}}`
 
 示例 `/process/12111`
 
-注：如果和数据库中一样，也会返回500的错误，所以如果实际未发生更改则不要请求，或者进行判断，或者写issues我改。。。
 
 ```json
-{//是否可选和增加环节完全一样
-    "process_id": "81da80b8-7f4e-43b8-9d8d-2fa5bb15c7a1",//必须要有
-    "process_name": "环节",
-    "process_type": 3,
-    "order": 5,
-    "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a",
-    "mic_hand": 20
-}
-```
-
-返回
-
-```json
-{
-    "data": {
-        "order": 5,
-        "process_id": "81da80b8-7f4e-43b8-9d8d-2fa5bb15c7a1",
-        "process_name": "环节",
-        "process_type": 3,
+[
+    {
+        "order": 1,
+        "process_name": "开始",
+        "process_type": 1,
         "mic_hand": 20,
         "mic_ear": 0,
         "remark": "",
         "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
     },
+    {
+        "order": 2,
+        "process_name": "青花瓷",
+        "process_type": 2,
+        "mic_hand": 20,
+        "mic_ear": 0,
+        "remark": "",
+        "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+    },
+    {
+        "order": 3,
+        "process_name": "结束",
+        "process_type": 3,
+        "mic_hand": 20,
+        "mic_ear": 0,
+        "remark": "",
+        "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+    }
+]
+```
+
+返回 // processid每次更新都不同，所以每次都要获取
+
+```json
+{
+    "data": [
+        {
+            "order": 1,
+            "process_id": "a45c36ed-3d8b-4daa-b857-4a95375f1ea0",
+            "process_name": "开始",
+            "process_type": 1,
+            "mic_hand": 20,
+            "mic_ear": 0,
+            "remark": "",
+            "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+        },
+        {
+            "order": 2,
+            "process_id": "075bc1a0-b499-4efd-ba3b-ce6f31e31c13",
+            "process_name": "青花瓷",
+            "process_type": 2,
+            "mic_hand": 20,
+            "mic_ear": 0,
+            "remark": "",
+            "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+        },
+        {
+            "order": 3,
+            "process_id": "ac776572-e06c-42f7-af7f-e9b513221c05",
+            "process_name": "结束",
+            "process_type": 3,
+            "mic_hand": 20,
+            "mic_ear": 0,
+            "remark": "",
+            "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+        }
+    ],
     "error": 0,
     "msg": "success"
 }
 ```
-
-
 
 新建环节负责人 PUT

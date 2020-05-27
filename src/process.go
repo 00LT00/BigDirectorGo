@@ -1,11 +1,11 @@
 package main
 
 import (
-	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
+/* 用超级笨的方法实现的增删改查，全删全插入，后端界的耻辱
 //检测环节是否存在，顺便返回次序
 func (s *Service) checkProcessOrder(processid string, projectid string) (int64, error) {
 	process := new(Process)
@@ -76,7 +76,7 @@ func (s *Service) UpdateProcess(c *gin.Context) (int, interface{}) {
 	tx.Commit()
 	return s.makeSuccessJSON(process)
 }
-
+*/
 //查找环节
 func (s *Service) GetProcess(c *gin.Context) (int, interface{}) {
 	processid := c.Query("processid")
@@ -92,4 +92,40 @@ func (s *Service) GetProcess(c *gin.Context) (int, interface{}) {
 		return s.makeErrJSON(403, 40302, err.Error())
 	}
 	return s.makeSuccessJSON(process)
+}
+
+func (s *Service) UpdateProcess(c *gin.Context) (int, interface{}) {
+	userid := c.Param("userid")
+	processes := make([]*Process, 10, 20)
+	if err := c.ShouldBindJSON(&processes); err != nil {
+		return 500, err.Error()
+	}
+	role, err := s.checkProject(processes[0].ProjectID, userid)
+	if err != nil {
+		return s.makeErrJSON(403, 40301, err.Error())
+	}
+	if role < 1 || role > 2 {
+		return s.makeErrJSON(403, 40301, "limited access")
+	}
+	//使环节id保持不变
+	for _, process := range processes {
+		if s.DB.Where(Process{ProcessID: process.ProcessID}).Find(&Process{}).RowsAffected == 0 {
+			process.ProcessID = uuid.New().String()
+		}
+	}
+	tx := s.DB.Begin()
+	err = tx.Where(Process{ProjectID: processes[0].ProjectID}).Delete(processes).Error
+	if err != nil {
+		tx.Rollback()
+		return s.makeErrJSON(500, 50000, err.Error())
+	}
+	for _, process := range processes {
+		err := tx.Create(process).Error
+		if err != nil {
+			tx.Rollback()
+			return s.makeErrJSON(500, 50001, string(process.Order)+" "+err.Error())
+		}
+	}
+	tx.Commit()
+	return s.makeSuccessJSON(processes)
 }
