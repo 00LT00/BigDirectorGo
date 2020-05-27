@@ -174,10 +174,11 @@ func (s *Service) GetProjectUser(c *gin.Context) (int, interface{}) {
 		UserID   string
 		UserName string
 		Role     int
+		Avatar   string
 	}
 	members := make([]*member, 50, 100)
 	err = s.DB.Table("project_user").
-		Select("project_user.user_id,users.user_name,project_user.role").
+		Select("project_user.user_id,users.user_name,project_user.role,users.avatar").
 		Joins("left join users on project_user.user_id = users.user_id").
 		Where(&Project_User{ProjectID: projectid}).Scan(&members).Error
 	if err != nil {
