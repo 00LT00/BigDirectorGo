@@ -79,6 +79,8 @@ func (s *Service) GetUserProject(c *gin.Context) (int, interface{}) {
 	type ProjectItem struct {
 		Project
 		DirectorName string
+		Role         int
+		MemberNum    int64
 	}
 	//返回结果的结构
 	result := struct {
@@ -100,8 +102,11 @@ func (s *Service) GetUserProject(c *gin.Context) (int, interface{}) {
 		if s.DB.Where(&Project{ProjectID: v.ProjectID}).First(project).RowsAffected == 1 {
 			projectitem := new(ProjectItem)
 			projectitem.Project = *project
+			projectitem.Role = v.Role
+			projectitem.MemberNum = s.DB.Where(&Project_User{ProjectID:v.ProjectID}).Find(&Project_User{}).RowsAffected
 			result.ProjectList = append(result.ProjectList, projectitem)
 		}
+
 	}
 
 	//通过导演id找到导演姓名
