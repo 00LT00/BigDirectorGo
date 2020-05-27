@@ -83,6 +83,12 @@ func (s *Service) initRouter() {
 		c.JSON(s.ActionStart(c))
 	})
 
+
+	//图片服务
+	file:=r.Group("/picture")
+	//静态图片
+	file.GET("/file/:filename", s.GetPicture)
+
 	/*测试区*/
 	//fmt.Println(s.GetOpenID("043VcuII1MHmF30qFcGI1YM5II1VcuI3"))
 	//fmt.Println(s.GetToken())
