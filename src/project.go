@@ -190,7 +190,7 @@ func (s *Service) GetProjectUser(c *gin.Context) (int, interface{}) {
 func (s Service) GetProjectProcess(c *gin.Context) (int, interface{}) {
 	project := c.Param("projectid")
 	processes := make([]*Process, 5, 20)
-	err := s.DB.Where(&Process{ProjectID: project}).Find(&processes).Error
+	err := s.DB.Where(&Process{ProjectID: project}).Order("order").Find(&processes).Error
 	if err != nil {
 		return s.makeErrJSON(500, 50000, err.Error())
 	}
