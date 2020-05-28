@@ -67,7 +67,7 @@ func (s *Service) AddMember(c *gin.Context) (int, interface{}) {
 	if role == -1 && err != nil {
 		return s.makeErrJSON(404, 40402, err.Error())
 	}
-	if 1 <= role && role <= 6 {
+	if 1 <= role && role <= 7 {
 		return s.makeErrJSON(403, 40308, errors.New("Already bound"))
 	}
 
@@ -167,7 +167,7 @@ func (s *Service) GetProjectUser(c *gin.Context) (int, interface{}) {
 	if err != nil {
 		return s.makeErrJSON(403, 40309, err.Error())
 	}
-	if role <= 0 || role > 6 {
+	if role <= 0 || role > 7 {
 		return s.makeErrJSON(403, 40310, "none role")
 	}
 	type member struct {

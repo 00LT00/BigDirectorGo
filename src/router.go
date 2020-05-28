@@ -80,6 +80,10 @@ func (s *Service) initRouter() {
 	process.PUT("/:userid", func(c *gin.Context) {
 		c.JSON(s.UpdateProcess(c))
 	})
+	//设置负责人
+	process.POST("/:userid", func(c *gin.Context) {
+		c.JSON(s.SetManager(c))
+	})
 	////修改
 	//process.POST("/:userid", func(c *gin.Context) {
 	//	c.JSON(s.UpdateProcess(c))

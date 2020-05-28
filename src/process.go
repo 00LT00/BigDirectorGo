@@ -107,27 +107,69 @@ func (s *Service) UpdateProcess(c *gin.Context) (int, interface{}) {
 	if role < 1 || role > 2 {
 		return s.makeErrJSON(403, 40301, "limited access")
 	}
+	nowProcessID := []string{}
 	//使环节id保持不变
 	for _, process := range processes {
 		if s.DB.Where(Process{ProcessID: process.ProcessID}).Find(&Process{}).RowsAffected == 0 {
 			process.ProcessID = uuid.New().String()
 		}
+		nowProcessID = append(nowProcessID, process.ProcessID)
 	}
 	tx := s.DB.Begin()
-	err = tx.Where(Process{ProjectID: processes[0].ProjectID}).Delete(processes).Error
+	err = tx.Where("process_id not in (?)", nowProcessID).Delete(processes).Error
 	if err != nil {
 		tx.Rollback()
 		return s.makeErrJSON(500, 50000, err.Error())
 	}
 	for _, process := range processes {
-		err := tx.Create(process).Error
+		err := tx.Where(Process{ProcessID: process.ProcessID}).
+			Assign(Process{ProcessID: process.ProcessID, Order: process.Order, ProcessName: process.ProcessName,
+				ProcessType: process.ProcessType, MicHand: process.MicHand, MicEar: process.MicEar, Remark: process.Remark,
+				ProjectID: process.ProjectID, ManagerID: process.ManagerID}).
+			FirstOrCreate(&process).Error
 		if err != nil {
 			tx.Rollback()
-			return s.makeErrJSON(500, 50001, string(process.Order)+" "+err.Error())
+			return s.makeErrJSON(500, 50001, string(process.Order)+" update error")
 		}
 	}
 	tx.Commit()
 	return s.makeSuccessJSON(processes)
 }
 
-//func(s *Service)SetProcesser
+type Manager struct {
+	ManagerID string `json:"manager_id" binding:"required"`
+	ProcessID string `json:"process_id" binding:"required"`
+}
+
+func (s *Service) SetManager(c *gin.Context) (int, interface{}) {
+	userid := c.Param("userid")
+	manager := new(Manager)
+	err := c.ShouldBindJSON(manager)
+	if err != nil {
+		return s.makeErrJSON(403, 40301, err.Error())
+	}
+	process := new(Process)
+	s.DB.Where(&Process{ProcessID: manager.ProcessID}).Find(process)
+	//验证操作者身份
+	role, err := s.checkProject(process.ProjectID, userid)
+	if role != 1 {
+		return s.makeErrJSON(403, 40302, "limited access")
+	}
+	if err != nil {
+		return s.makeErrJSON(403, 40302, err.Error())
+	}
+	//验证要设置的负责人的身份
+	err = s.checkUser(manager.ManagerID)
+	if err != nil {
+		return s.makeErrJSON(403, 40303, err.Error())
+	}
+
+	process.ManagerID = manager.ManagerID
+	tx := s.DB.Begin()
+	if tx.Model(&Process{}).Where(&Process{ProcessID: manager.ProcessID}).Updates(process).RowsAffected != 1 {
+		tx.Rollback()
+		return s.makeErrJSON(500, 50000, "update error")
+	}
+	tx.Commit()
+	return s.makeSuccessJSON(process)
+}

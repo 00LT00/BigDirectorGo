@@ -331,12 +331,14 @@ project -> process
 
 ## 环节 `/process`
 
-- 新建环节 PUT `/process/{{userid}}`
 
-示例 `/process/123456`
 
-```json
-{
+//作废！！！！ - 新建环节 PUT `/process/{{userid}}`
+
+//示例 `/process/123456`
+
+//```json
+//{
     "process_id": "", //无效字段，填不填任意，id自动生成，以返回值为主
     "process_name": "结束",
     "process_type": 6,
@@ -345,13 +347,13 @@ project -> process
     "mic_hand": 20, // 可选
     "mic_ear": 3, // 可选
     "remark": "asdfasgsgageaasdfasd" //可选
-}
-```
+//}
+//```
 
-返回值
+//返回值
 
-```json
-{
+//```json
+//{
     "data": {
         "order": 10,
         "process_id": "9a821cbe-2715-4bed-a883-789ff45b6b5d",
@@ -364,28 +366,29 @@ project -> process
     },
     "error": 0,
     "msg": "success"
-}
-```
+//}
+//```
 
 
 
 - 获取环节详情 GET `/process/{{userid = }}&{{processid = }}`
 
-示例 `/process/?processid=e2e6f9a9-6506-45cb-af0a-2eee881ebfef&userid=12111`
+示例 */process/?processid=e2e6f9a9-6506-45cb-af0a-2eee881ebfef&userid=12111*
 
 返回
 
 ```json
 {
     "data": {
-        "order": 5,
-        "process_id": "e2e6f9a9-6506-45cb-af0a-2eee881ebfef",
-        "process_name": "开始",
-        "process_type": 1,
-        "mic_hand": 20,
+        "order": 3,
+        "process_id": "ac776572-e06c-42f7-af7f-e9b513221c05",
+        "process_name": "结束",
+        "process_type": 3,
+        "mic_hand": 215,
         "mic_ear": 0,
         "remark": "",
-        "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+        "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a",
+        "manager_id": "123456"
     },
     "error": 0,
     "msg": "success"
@@ -438,33 +441,36 @@ project -> process
     "data": [
         {
             "order": 1,
-            "process_id": "a45c36ed-3d8b-4daa-b857-4a95375f1ea0",
+            "process_id": "459ccef2-5309-4f97-9bd3-97291cb76c3a",
             "process_name": "开始",
             "process_type": 1,
             "mic_hand": 20,
             "mic_ear": 0,
             "remark": "",
-            "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+            "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a",
+            "manager_id": ""
         },
         {
             "order": 2,
             "process_id": "075bc1a0-b499-4efd-ba3b-ce6f31e31c13",
             "process_name": "青花瓷",
             "process_type": 2,
-            "mic_hand": 20,
+            "mic_hand": 2,
             "mic_ear": 0,
             "remark": "",
-            "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+            "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a",
+            "manager_id": ""
         },
         {
             "order": 3,
             "process_id": "ac776572-e06c-42f7-af7f-e9b513221c05",
             "process_name": "结束",
             "process_type": 3,
-            "mic_hand": 20,
+            "mic_hand": 215,
             "mic_ear": 0,
             "remark": "",
-            "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
+            "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a",
+            "manager_id": "123456"
         }
     ],
     "error": 0,
@@ -472,4 +478,34 @@ project -> process
 }
 ```
 
-新建环节负责人 PUT
+设置环节负责人 POST`/{{userid}}`
+
+示例 `/process/12111`
+
+```json
+{
+    "manager_id": "123456",
+    "process_id": "ac776572-e06c-42f7-af7f-e9b513221c05"
+}
+```
+
+返回
+
+```json
+{
+    "data": {
+        "order": 3,
+        "process_id": "ac776572-e06c-42f7-af7f-e9b513221c05",
+        "process_name": "结束",
+        "process_type": 3,
+        "mic_hand": 215,
+        "mic_ear": 0,
+        "remark": "",
+        "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a",
+        "manager_id": "123456"
+    },
+    "error": 0,
+    "msg": "success"
+}
+```
+
