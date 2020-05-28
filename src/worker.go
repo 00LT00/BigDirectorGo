@@ -32,27 +32,27 @@ func (s *Service) SetWorker(c *gin.Context) (int, interface{}) {
 	return s.makeSuccessJSON(worker)
 }
 
-type result struct {
-	workers  []Worker
-	managers []Manager
-}
+//type result struct {
+//	workers  []Worker
+//	managers []Manager
+//}
 
 //获取项目的所有管理人员
-func (s *Service) GetWorker(c *gin.Context) (int, interface{}) {
-	userid := c.Query("userid")
-	projectid := c.Query("projectid")
-	role, err := s.checkProject(projectid, userid)
-	if err != nil {
-		return s.makeErrJSON(403, 40301, err.Error())
-	}
-	if role < 1 || role > 7 {
-		return s.makeErrJSON(403, 40301, "limited access")
-	}
-
-	//先获取workers
-	role = 4
-	for ; role <= 7; role++ {
-
-	}
-
-}
+//func (s *Service) GetWorker(c *gin.Context) (int, interface{}) {
+//	userid := c.Query("userid")
+//	projectid := c.Query("projectid")
+//	role, err := s.checkProject(projectid, userid)
+//	if err != nil {
+//		return s.makeErrJSON(403, 40301, err.Error())
+//	}
+//	if role < 1 || role > 7 {
+//		return s.makeErrJSON(403, 40301, "limited access")
+//	}
+//
+//	//先获取workers
+//	role = 4
+//	for ; role <= 7; role++ {
+//
+//	}
+//
+//}
