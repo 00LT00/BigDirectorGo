@@ -89,6 +89,12 @@ func (s *Service) initRouter() {
 	//	c.JSON(s.UpdateProcess(c))
 	//})
 
+	//灯光，音效，后台，道具
+	worker := r.Group("/worker")
+	worker.PUT("/:userid", func(c *gin.Context) {
+		c.JSON(s.SetWorker(c))
+	})
+
 	//推送服务的路由组
 	send := r.Group("/send")
 	send.POST("/", func(c *gin.Context) {

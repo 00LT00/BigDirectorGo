@@ -110,7 +110,7 @@ func (s *Service) UpdateProcess(c *gin.Context) (int, interface{}) {
 	nowProcessID := []string{}
 	//使环节id保持不变
 	for _, process := range processes {
-		if s.DB.Where(Process{ProcessID: process.ProcessID}).Find(&Process{}).RowsAffected == 0 {
+		if s.DB.Where(Process{ProcessID: process.ProcessID, ProjectID: process.ProjectID}).Find(&Process{}).RowsAffected == 0 {
 			process.ProcessID = uuid.New().String()
 		}
 		nowProcessID = append(nowProcessID, process.ProcessID)

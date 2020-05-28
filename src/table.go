@@ -48,7 +48,7 @@ type Process struct {
 	MicEar      int64  `json:"mic_ear" binding:"-"`  //可选
 	Remark      string `json:"remark" binding:"-"`   //可选
 	ProjectID   string `gorm:"not null" json:"project_id" binding:"required"`
-	ManagerID	string `json:"manager_id" binding:"-"`
+	ManagerID   string `json:"manager_id" binding:"-"`
 }
 
 //环节类型
@@ -70,4 +70,10 @@ var RoleTable = map[interface{}]interface{}{
 	5:           "light",
 	6:           "backstage",
 	7:           "prop",
+}
+
+type Worker struct {
+	ProjectID string `json:"project_id" gorm:"not null" binding:"required"`
+	WorkerID  string `json:"worker_id" gorm:"not null" binding:"required"`
+	Type      int    `json:"type" gorm:"not null" binding:"required"`
 }
