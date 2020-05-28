@@ -96,33 +96,37 @@ func (s *Service) GetProcess(c *gin.Context) (int, interface{}) {
 
 func (s *Service) UpdateProcess(c *gin.Context) (int, interface{}) {
 	userid := c.Param("userid")
-	processes := make([]*Process, 10, 20)
-	if err := c.ShouldBindJSON(&processes); err != nil {
+	requestjson := struct {
+		Processes []*Process `json:"processes"`
+		ProjectID string     `json:"project_id"`
+	}{}
+	if err := c.ShouldBindJSON(&requestjson); err != nil {
 		return 500, err.Error()
 	}
-	role, err := s.checkProject(processes[0].ProjectID, userid)
+	role, err := s.checkProject(requestjson.ProjectID, userid)
 	if err != nil {
 		return s.makeErrJSON(403, 40301, err.Error())
 	}
 	if role < 1 || role > 2 {
 		return s.makeErrJSON(403, 40301, "limited access")
 	}
-	nowProcessID := []string{}
+	nowProcessID := make([]string, 1, 10)
+	nowProcessID[0] = ""
 	//使环节id保持不变
-	for _, process := range processes {
-		temp := new(Process)
-		if s.DB.Where("process_id = ?", process.ProcessID).Find(temp).RowsAffected == 0 {
+	for _, process := range requestjson.Processes {
+		if s.DB.Where("process_id = ?", process.ProcessID).Find(&Process{}).RowsAffected == 0 {
 			process.ProcessID = uuid.New().String()
 		}
+		process.ProjectID = requestjson.ProjectID
 		nowProcessID = append(nowProcessID, process.ProcessID)
 	}
 	tx := s.DB.Begin()
-	err = tx.Where("process_id not in (?)", nowProcessID).Delete(processes).Error
+	err = tx.Where("process_id not in (?)", nowProcessID).Where(Process{ProjectID: requestjson.ProjectID}).Delete(requestjson.Processes).Error
 	if err != nil {
 		tx.Rollback()
 		return s.makeErrJSON(500, 50000, err.Error())
 	}
-	for _, process := range processes {
+	for _, process := range requestjson.Processes {
 		err := tx.Where(Process{ProcessID: process.ProcessID}).
 			Assign(Process{ProcessID: process.ProcessID, Order: process.Order, ProcessName: process.ProcessName,
 				ProcessType: process.ProcessType, MicHand: process.MicHand, MicEar: process.MicEar, Remark: process.Remark,
@@ -134,7 +138,7 @@ func (s *Service) UpdateProcess(c *gin.Context) (int, interface{}) {
 		}
 	}
 	tx.Commit()
-	return s.makeSuccessJSON(processes)
+	return s.makeSuccessJSON(requestjson)
 }
 
 type Manager struct {

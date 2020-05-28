@@ -403,35 +403,31 @@ project -> process
 
 
 ```json
-[
-    {
-        "order": 1,
-        "process_name": "开始",
-        "process_type": 1,
-        "mic_hand": 20,
-        "mic_ear": 0,
-        "remark": "",
-        "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
-    },
-    {
-        "order": 2,
-        "process_name": "青花瓷",
-        "process_type": 2,
-        "mic_hand": 20,
-        "mic_ear": 0,
-        "remark": "",
-        "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
-    },
-    {
-        "order": 3,
-        "process_name": "结束",
-        "process_type": 3,
-        "mic_hand": 20,
-        "mic_ear": 0,
-        "remark": "",
-        "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a"
-    }
-]
+{
+    "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a",
+    "processes": [
+        {
+          "process_id":"cf94866d-abaa-4263-ac20-b2ca8cf12c8d", //新环节不用写，但是已经存在的环节一定要写
+            "process_type": 6,
+            "order": 19,
+            "mic_hand": 20,
+            "mic_ear": 3
+        },
+       {
+            "process_name": "名字",
+            "process_type": 2,
+            "order": 10,
+            "mic_hand": 2,
+            "mic_ear": 3
+        },
+       {
+            "process_type": 4,
+            "order": 17,
+            "mic_hand": 20,
+            "mic_ear": 3
+        }
+    ]
+}
 ```
 
 返回 // processid

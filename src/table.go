@@ -47,7 +47,7 @@ type Process struct {
 	MicHand     int64  `json:"mic_hand" binding:"-"` //可选
 	MicEar      int64  `json:"mic_ear" binding:"-"`  //可选
 	Remark      string `json:"remark" binding:"-"`   //可选
-	ProjectID   string `gorm:"not null" json:"project_id" binding:"required"`
+	ProjectID   string `gorm:"not null" json:"project_id" binding:"-"`
 	ManagerID   string `json:"manager_id" binding:"-"`
 }
 
