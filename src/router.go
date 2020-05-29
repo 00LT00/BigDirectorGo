@@ -91,8 +91,13 @@ func (s *Service) initRouter() {
 
 	//灯光，音效，后台，道具
 	worker := r.Group("/worker")
+	//设置除了环节以外的所有负责人
 	worker.PUT("/:userid", func(c *gin.Context) {
 		c.JSON(s.SetWorker(c))
+	})
+	//查看项目的所有相关负责人,包括环节负责人
+	worker.GET("/", func(c *gin.Context) {
+		c.JSON(s.GetWorker(c))
 	})
 
 	//推送服务的路由组

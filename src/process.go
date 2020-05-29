@@ -141,11 +141,6 @@ func (s *Service) UpdateProcess(c *gin.Context) (int, interface{}) {
 	return s.makeSuccessJSON(requestjson)
 }
 
-type Manager struct {
-	ManagerID string `json:"manager_id" binding:"required"`
-	ProcessID string `json:"process_id" binding:"required"`
-}
-
 func (s *Service) SetManager(c *gin.Context) (int, interface{}) {
 	userid := c.Param("userid")
 	manager := new(Manager)

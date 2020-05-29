@@ -75,5 +75,10 @@ var RoleTable = map[interface{}]interface{}{
 type Worker struct {
 	ProjectID string `json:"project_id" gorm:"not null" binding:"required"`
 	WorkerID  string `json:"worker_id" gorm:"not null" binding:"required"`
-	Type      int    `json:"type" gorm:"not null" binding:"required"`
+	Role      int    `json:"role" gorm:"not null" binding:"required"`
+}
+
+type Manager struct {
+	ManagerID string `json:"manager_id" binding:"required"`
+	ProcessID string `json:"process_id" binding:"required"`
 }
