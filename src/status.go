@@ -29,3 +29,19 @@ func (s *Service) SetProjectStatus(c *gin.Context) (int, interface{}) {
 	tx.Commit()
 	return s.makeSuccessJSON(projectstatus_json.ProjectStatus)
 }
+
+func (s *Service) GetProjectStatus(c *gin.Context) (int, interface{}) {
+	projectid := c.Query("projectid")
+	userid := c.Query("userid")
+	if projectid == "" || userid == "" {
+		return s.makeErrJSON(403, 40301, "query error")
+	}
+	//权限验证
+	role, err := s.checkProject(projectid, userid)
+	if role < 1 || role > 7 || err != nil {
+		return s.makeErrJSON(403, 40302, "limited access")
+	}
+	projectstatus := new(ProjectStatus)
+	s.DB.Where(ProjectStatus{ProjectID: projectid}).Last(projectstatus)
+	return s.makeSuccessJSON(projectstatus)
+}
