@@ -670,19 +670,22 @@ var RoleTable = map[interface{}]interface{}{
                   "manager_id": "111",
                   "process_id": "0ea1a6d5-5c95-40ec-8366-039d271c8539",
                   "ManagerName": "asdf",
-                  "PhoneNum": "13456"
+                  "PhoneNum": "13456",
+                  "ProcessName": "名字"
               },
               {
                   "manager_id": "12111",
                   "process_id": "3ba76e12-276e-42d2-8beb-ec4b1d289d80",
                   "ManagerName": "wzl",
-                  "PhoneNum": "13456"
+                  "PhoneNum": "13456",
+                  "ProcessName": ""
               },
               {
                   "manager_id": "123456",
                   "process_id": "cf94866d-abaa-4263-ac20-b2ca8cf12c8d",
                   "ManagerName": "asdf",
-                  "PhoneNum": "123"
+                  "PhoneNum": "123",
+                  "ProcessName": ""
               }
           ]
       },

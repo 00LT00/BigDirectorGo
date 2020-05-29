@@ -39,15 +39,16 @@ func (s *Service) SetWorker(c *gin.Context) (int, interface{}) {
 }
 
 type Result struct {
-	Workers []*struct {
+	Workers []struct {
 		Worker
 		WorkerName string
 		PhoneNum   string
 	}
-	Managers []*struct {
+	Managers []struct {
 		Manager
 		ManagerName string
 		PhoneNum    string
+		ProcessName string
 	}
 }
 
@@ -79,7 +80,7 @@ func (s *Service) GetWorker(c *gin.Context) (int, interface{}) {
 			}
 			worker.PhoneNum = user.PhoneNum
 			worker.WorkerName = user.UserName
-			result.Workers = append(result.Workers, worker)
+			result.Workers = append(result.Workers, *worker)
 		}
 	}
 	// 找manager,其实这里应该使用视图或者是直接用外连接做，但这里因为使用频率不高,为了和上面写法统一，就没去写连接
@@ -90,16 +91,18 @@ func (s *Service) GetWorker(c *gin.Context) (int, interface{}) {
 			Manager
 			ManagerName string
 			PhoneNum    string
+			ProcessName string
 		})
 		manager.ProcessID = process.ProcessID
 		manager.ManagerID = process.ManagerID
+		manager.ProcessName = process.ProcessName
 		user := new(User)
-		if s.DB.Where(User{UserId: manager.ManagerID}).Find(&user).RowsAffected != 1 {
+		if s.DB.Table("users").Where("user_id = ?", manager.ManagerID).Find(&user).RowsAffected > 1 {
 			return s.makeErrJSON(500, 50001, "get managerinfo error")
 		}
 		manager.ManagerName = user.UserName
 		manager.PhoneNum = user.PhoneNum
-		result.Managers = append(result.Managers, manager)
+		result.Managers = append(result.Managers, *manager)
 	}
 	return s.makeSuccessJSON(result)
 }
