@@ -100,6 +100,11 @@ func (s *Service) initRouter() {
 		c.JSON(s.GetWorker(c))
 	})
 
+	status := r.Group("/status")
+	status.POST("/", func(c *gin.Context) {
+		c.JSON(s.SetProjectStatus(c))
+	})
+
 	//推送服务的路由组
 	send := r.Group("/send")
 	send.POST("/", func(c *gin.Context) {

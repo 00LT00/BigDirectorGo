@@ -84,9 +84,8 @@ type Manager struct {
 }
 
 type ProjectStatus struct {
-	gorm.Model
-	UserID       string `json:"user_id" gorm:"not null" binding:"repaired"`
-	ProjectID    string `json:"project_id" gorm:"not null" binding:"repaired"`
-	ProcessIndex int    `json:"process_index" gorm:"not null" binding:"repaired"`
-	Flag         bool   `json:"flag" gorm:"not null" binding:"repaired"`
+	gorm.Model   `json:"-"`
+	ProjectID    string `json:"project_id" gorm:"not null" binding:"required"`
+	ProcessIndex int    `json:"process_index" gorm:"not null" binding:"required"`
+	Flag         bool   `json:"flag" gorm:"not null" binding:"required"`
 }
