@@ -49,6 +49,7 @@ type Result struct {
 		ManagerName string
 		PhoneNum    string
 		ProcessName string
+		Type 		int64
 	}
 }
 
@@ -92,10 +93,12 @@ func (s *Service) GetWorker(c *gin.Context) (int, interface{}) {
 			ManagerName string
 			PhoneNum    string
 			ProcessName string
+			Type 		int64
 		})
 		manager.ProcessID = process.ProcessID
 		manager.ManagerID = process.ManagerID
 		manager.ProcessName = process.ProcessName
+		manager.Type = process.ProcessType
 		user := new(User)
 		if s.DB.Table("users").Where("user_id = ?", manager.ManagerID).Find(&user).RowsAffected > 1 {
 			return s.makeErrJSON(500, 50001, "get managerinfo error")
