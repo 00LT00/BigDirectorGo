@@ -23,6 +23,8 @@ var RoleTable = map[interface{}]interface{}{
 	6:           "backstage",
 	7:           "prop",
 }
+//环节类型对照
+var ProcessTypeArr = [6]string{"节目", "互动", "颁奖", "致辞", "开场", "结束"}
 ```
 
 - [我是大导演](#我是大导演)
