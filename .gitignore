@@ -17,4 +17,4 @@
 # vendor/
 
 /.idea/
-
+src/config/weixin.toml
