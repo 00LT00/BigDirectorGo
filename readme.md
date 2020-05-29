@@ -1,9 +1,29 @@
 # 我是大导演
 
-项目 -> 环节
+项目 -> 环节 ： project -> process
+director：项目的导演，权限最大
+worker：灯光，音乐，后台，道具
+manager：环节负责人
 
-project -> process
-
+```go
+//角色对照表
+var RoleTable = map[interface{}]interface{}{
+	"director":  1,
+	"manager":   2,
+	"member":    3,
+	"music":     4,
+	"light":     5,
+	"backstage": 6,
+	"prop":      7,
+	1:           "director",
+	2:           "manager",
+	3:           "member",
+	4:           "music",
+	5:           "light",
+	6:           "backstage",
+	7:           "prop",
+}
+```
 
 - [我是大导演](#我是大导演)
   - [用户 `/user`](#用户-user)
