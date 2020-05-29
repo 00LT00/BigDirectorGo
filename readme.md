@@ -47,6 +47,8 @@ var ProcessTypeArr = [6]string{"节目", "互动", "颁奖", "致辞", "开场",
   - [管理人员 `/worker`](#管理人员-worker)
     - [设置除节目以外的其他负责人](#设置除节目以外的其他负责人)
     - [获取项目除导演以外的所有负责人](#获取项目除导演以外的所有负责人)
+  - [环节状态 `/status`](#环节状态-status)
+    - [导演设置环节状态](#导演设置环节状态)
 
 ## 用户 `/user`
 
@@ -696,4 +698,37 @@ var ProcessTypeArr = [6]string{"节目", "互动", "颁奖", "致辞", "开场",
   }
   ```
 
+
+## 环节状态 `/status`
+
+### 导演设置环节状态
+
+格式：GET `/`
+
+- 示例 `/status/`
+
+  ```json
+  {
+      "user_id": "12111",
+      "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a",
+      "process_index": 2,
+      "flag": true
+  }
+  ```
+
+- 返回
+
+  ```json
+  {
+      "data": {
+          "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a",
+          "process_index": 2,
+          "flag": true
+      },
+      "error": 0,
+      "msg": "success"
+  }
+  ```
+
   
+
