@@ -86,6 +86,6 @@ type Manager struct {
 type ProjectStatus struct {
 	gorm.Model   `json:"-"`
 	ProjectID    string `json:"project_id" gorm:"not null" binding:"required"`
-	ProcessIndex int    `json:"process_index" gorm:"not null" binding:"required"`
+	ProcessIndex *int    `json:"process_index" gorm:"not null" binding:"required"`
 	Flag         *bool  `json:"flag" gorm:"not null" binding:"required"`
 }

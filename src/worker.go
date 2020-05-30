@@ -133,9 +133,7 @@ func (s *Service) GetWorker(c *gin.Context) (int, interface{}) {
 		manager.ManagerName = user.UserName
 		manager.PhoneNum = user.PhoneNum
 		manager.Avatar = user.Avatar
-		if manager.ManagerID != "" {
-			result.Managers = append(result.Managers, *manager)
-		}
+		result.Managers = append(result.Managers, *manager)
 	}
 	return s.makeSuccessJSON(result)
 }
