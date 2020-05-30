@@ -646,28 +646,32 @@ var ProcessTypeArr = [6]string{"节目", "互动", "颁奖", "致辞", "开场",
                   "worker_id": "111",
                   "role": 4,
                   "WorkerName": "asdf",
-                  "PhoneNum": "13456"
+                  "PhoneNum": "13456",
+                  "Avatar": "asdfdlfajsldfjsaldkf"
               },
               {
                   "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a",
                   "worker_id": "123456",
                   "role": 5,
                   "WorkerName": "asdf",
-                  "PhoneNum": "123"
+                  "PhoneNum": "123",
+                  "Avatar": "asdfdlfajsldfjsaldkf"
               },
               {
                   "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a",
                   "worker_id": "123456",
                   "role": 6,
                   "WorkerName": "asdf",
-                  "PhoneNum": "123"
+                  "PhoneNum": "123",
+                  "Avatar": "asdfdlfajsldfjsaldkf"
               },
               {
                   "project_id": "f3852e84-130a-4ab8-be69-7fae2628ba3a",
                   "worker_id": "123456",
                   "role": 7,
                   "WorkerName": "asdf",
-                  "PhoneNum": "123"
+                  "PhoneNum": "123",
+                  "Avatar": "asdfdlfajsldfjsaldkf"
               }
           ],
           "Managers": [
@@ -676,21 +680,27 @@ var ProcessTypeArr = [6]string{"节目", "互动", "颁奖", "致辞", "开场",
                   "process_id": "0ea1a6d5-5c95-40ec-8366-039d271c8539",
                   "ManagerName": "asdf",
                   "PhoneNum": "13456",
-                  "ProcessName": "名字"
+                  "ProcessName": "名字",
+                  "Type": 6,
+                  "Avatar": "asdfdlfajsldfjsaldkf"
               },
               {
                   "manager_id": "12111",
                   "process_id": "3ba76e12-276e-42d2-8beb-ec4b1d289d80",
                   "ManagerName": "wzl",
                   "PhoneNum": "13456",
-                  "ProcessName": ""
+                  "ProcessName": "",
+                  "Type": 6,
+                  "Avatar": "asdfdlfajsldfjsaldkf"
               },
               {
                   "manager_id": "123456",
                   "process_id": "cf94866d-abaa-4263-ac20-b2ca8cf12c8d",
                   "ManagerName": "asdf",
                   "PhoneNum": "123",
-                  "ProcessName": ""
+                  "ProcessName": "",
+                  "Type": 6,
+                  "Avatar": "asdfdlfajsldfjsaldkf"
               }
           ]
       },
