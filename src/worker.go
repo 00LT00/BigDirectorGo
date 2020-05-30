@@ -16,6 +16,7 @@ func (s *Service) SetWorker(c *gin.Context) (int, interface{}) {
 	if worker.Role < 4 || worker.Role > 7 {
 		return s.makeErrJSON(403, 40304, "type error")
 	}
+	//只有导演才能设置
 	role, err := s.checkProject(worker.ProjectID, userid)
 	if err != nil {
 		return s.makeErrJSON(403, 40302, err.Error())
@@ -23,16 +24,37 @@ func (s *Service) SetWorker(c *gin.Context) (int, interface{}) {
 	if role != 1 {
 		return s.makeErrJSON(403, 40302, "limited access")
 	}
+	//必须是成员才可以被设置
 	role, err = s.checkProject(worker.ProjectID, worker.WorkerID)
-	if err != nil || role < 1 || role > 7 {
+	if err != nil || role < 2 || role > 7 {
 		return s.makeErrJSON(403, 40303, "none member")
 	}
+	//获取之前的负责人
+	oldworker := new(Worker)
+	s.DB.Where(&Worker{ProjectID: worker.ProjectID, Role: worker.Role}).Find(&oldworker)
+
 	tx := s.DB.Begin()
 	if tx.Where(Worker{ProjectID: worker.ProjectID, Role: worker.Role}).
 		Assign(Worker{ProjectID: worker.ProjectID, WorkerID: worker.WorkerID, Role: worker.Role}).
 		FirstOrCreate(&worker).RowsAffected != 1 {
 		tx.Rollback()
 		return s.makeErrJSON(500, 50000, "update error")
+	}
+	if tx.Model(&Project_User{}).Where(&Project_User{ProjectID: worker.ProjectID, UserID: worker.WorkerID}).
+		Updates(&Project_User{Role: worker.Role}).RowsAffected != 1 {
+		tx.Rollback()
+		return s.makeErrJSON(500, 50001, "update project_user error")
+	}
+	//只有两个都找不到了才会变成3
+	if s.DB.Where(&Process{ProjectID: oldworker.ProjectID, ManagerID: oldworker.WorkerID}).Find(&Process{}).RowsAffected == 0 {
+		if s.DB.Where(&Worker{ProjectID: oldworker.ProjectID, WorkerID: oldworker.WorkerID}).Find(&Worker{}).RowsAffected == 0 {
+			if tx.Model(&Project_User{}).
+				Where(&Project_User{ProjectID: oldworker.ProjectID, UserID: oldworker.WorkerID}).
+				Updates(&Project_User{Role: RoleTable["member"].(int)}).RowsAffected != 1 {
+				tx.Rollback()
+				return s.makeErrJSON(500, 50001, "clear manager role error")
+			}
+		}
 	}
 	tx.Commit()
 	return s.makeSuccessJSON(worker)
@@ -43,13 +65,15 @@ type Result struct {
 		Worker
 		WorkerName string
 		PhoneNum   string
+		Avatar     string
 	}
 	Managers []struct {
 		Manager
 		ManagerName string
 		PhoneNum    string
 		ProcessName string
-		Type 		int64
+		Type        int64
+		Avatar      string
 	}
 }
 
@@ -73,6 +97,7 @@ func (s *Service) GetWorker(c *gin.Context) (int, interface{}) {
 			Worker
 			WorkerName string
 			PhoneNum   string
+			Avatar     string
 		})
 		if s.DB.Where(&Worker{Role: role, ProjectID: projectid}).Find(&worker.Worker).RowsAffected == 1 {
 			user := new(User)
@@ -81,6 +106,7 @@ func (s *Service) GetWorker(c *gin.Context) (int, interface{}) {
 			}
 			worker.PhoneNum = user.PhoneNum
 			worker.WorkerName = user.UserName
+			worker.Avatar = user.Avatar
 			result.Workers = append(result.Workers, *worker)
 		}
 	}
@@ -93,7 +119,8 @@ func (s *Service) GetWorker(c *gin.Context) (int, interface{}) {
 			ManagerName string
 			PhoneNum    string
 			ProcessName string
-			Type 		int64
+			Type        int64
+			Avatar      string
 		})
 		manager.ProcessID = process.ProcessID
 		manager.ManagerID = process.ManagerID
@@ -105,7 +132,10 @@ func (s *Service) GetWorker(c *gin.Context) (int, interface{}) {
 		}
 		manager.ManagerName = user.UserName
 		manager.PhoneNum = user.PhoneNum
-		result.Managers = append(result.Managers, *manager)
+		manager.Avatar = user.Avatar
+		if manager.ManagerID != "" {
+			result.Managers = append(result.Managers, *manager)
+		}
 	}
 	return s.makeSuccessJSON(result)
 }
