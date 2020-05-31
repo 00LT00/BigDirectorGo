@@ -4,6 +4,9 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"io"
+	"os"
+	"path"
 )
 
 //验证项目是否存在，或者返回权限
@@ -42,6 +45,21 @@ func (s *Service) AddProject(c *gin.Context) (int, interface{}) {
 	uuid4 := uuid.New().String()
 	//为了二维码，限制在32位，原本是36位
 	project.ProjectID = uuid4[:len(uuid4)-4]
+	//生成二维码的buffer
+	buffer, err := s.MakeWxacodeBuffer(project.ProjectID) // 这里buffer已经处理成字符串了
+	if err != nil {
+		return s.makeErrJSON(500, 50010, err.Error())
+	}
+	//保存文件
+	filename := path.Join("..", "wxacode", project.ProjectID)
+	f, err := os.Create(filename)
+	if err != nil {
+		return s.makeErrJSON(500, 50010, err.Error())
+	}
+	_, err = io.WriteString(f, buffer) //写入文件(字符串)
+	if err != nil {
+		return s.makeErrJSON(500, 50010, err.Error())
+	}
 	//开启事务
 	tx := s.DB.Begin()
 	//新建项目

@@ -117,10 +117,14 @@ func (s *Service) initRouter() {
 		c.JSON(s.ActionStart(c))
 	})
 
-	//图片服务
-	file := r.Group("/picture")
+	//文件服务
+	file := r.Group("/file")
 	//静态图片
-	file.GET("/file/:filename", s.GetPicture)
+	file.GET("/picture/:filename", s.GetPicture)
+	//二维码
+	file.GET("/wxacode/:projectid", func(c *gin.Context) {
+		c.JSON(s.GetWxacodeBuffer(c))
+	})
 
 	/*测试区*/
 	//fmt.Println(s.GetOpenID("043VcuII1MHmF30qFcGI1YM5II1VcuI3"))
