@@ -9,7 +9,7 @@ import (
 
 func (s *Service) GetPicture(c *gin.Context) {
 	filename_:=c.Param("filename")
-	filename := path.Join(".","picture",filename_)
+	filename := path.Join("..","picture",filename_)
 	fmt.Println(filename)
 	file,err:=os.Open(filename) // file文件实现了io.reader
 	if err != nil {
