@@ -50,6 +50,8 @@ var ProcessTypeArr = [6]string{"节目", "互动", "颁奖", "致辞", "开场",
   - [环节状态 `/status`](#环节状态-status)
     - [导演设置环节状态](#导演设置环节状态)
     - [获取项目状态](#获取项目状态)
+  - [二维码 `/file`](#二维码-file)
+    - [获取项目二维码](#获取项目二维码)
 
 ## 用户 `/user`
 
@@ -758,6 +760,27 @@ var ProcessTypeArr = [6]string{"节目", "互动", "颁奖", "致辞", "开场",
           "process_index": 6,
           "flag": true
       },
+      "error": 0,
+      "msg": "success"
+  }
+  ```
+
+
+
+
+## 二维码 `/file`
+
+### 获取项目二维码
+
+格式：GET `/wxacode/{{projectid}}`
+
+- 示例 `/file/wxacode/38d41284-e4ce-45e1-84e1-008d09e7`
+
+- 返回
+
+  ```json
+  {
+      "data": "asdfasdjgghlasfsjf......太长装不下了",
       "error": 0,
       "msg": "success"
   }
