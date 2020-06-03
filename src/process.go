@@ -170,13 +170,22 @@ func (s *Service) SetManager(c *gin.Context) (int, interface{}) {
 		return s.makeErrJSON(403, 40303, "dont member")
 	}
 
-	//查询原管理者在项目中的角色，如果有大于一条的记录，证明还是其他环节负责人，不变
-	//如果就一条，查询worker表，有东西就不变，没有就把权限设置为3
+	//获取之前的管理员信息
+	oldManagerID := process.ManagerID
+
+	//更改库中的管理员信息
+	process.ManagerID = manager.ManagerID
 	tx := s.DB.Begin()
-	if s.DB.Where(&Process{ProjectID: process.ProjectID, ManagerID: process.ManagerID}).Find(&Process{}).RowsAffected == 1 {
-		if s.DB.Where(&Worker{ProjectID: process.ProjectID, WorkerID: process.ManagerID}).Find(&Worker{}).RowsAffected == 0 {
+	if tx.Model(&Process{}).Where(&Process{ProcessID: manager.ProcessID}).Updates(&Process{ManagerID: manager.ManagerID}).RowsAffected != 1 {
+		tx.Rollback()
+		return s.makeErrJSON(500, 50000, "update error")
+	}
+
+	//查找原来的管理员是否还有其他任职
+	if s.DB.Where(&Process{ProjectID: process.ProjectID, ManagerID: oldManagerID}).Find(&Process{}).RowsAffected == 0 {
+		if s.DB.Where(&Worker{ProjectID: process.ProjectID, WorkerID: oldManagerID}).Find(&Worker{}).RowsAffected == 0 {
 			if tx.Model(&Project_User{}).
-				Where(&Project_User{ProjectID: process.ProjectID, UserID: process.ManagerID}).
+				Where(&Project_User{ProjectID: process.ProjectID, UserID: oldManagerID}).
 				Updates(&Project_User{Role: RoleTable["member"].(int)}).RowsAffected != 1 {
 				tx.Rollback()
 				return s.makeErrJSON(500, 50001, "clear manager role error")
@@ -185,12 +194,5 @@ func (s *Service) SetManager(c *gin.Context) (int, interface{}) {
 	}
 	tx.Commit()
 
-	process.ManagerID = manager.ManagerID
-	tx = s.DB.Begin()
-	if tx.Model(&Process{}).Where(&Process{ProcessID: manager.ProcessID}).Updates(&Process{ManagerID: manager.ManagerID}).RowsAffected != 1 {
-		tx.Rollback()
-		return s.makeErrJSON(500, 50000, "update error")
-	}
-	tx.Commit()
 	return s.makeSuccessJSON(process)
 }
