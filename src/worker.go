@@ -45,6 +45,7 @@ func (s *Service) SetWorker(c *gin.Context) (int, interface{}) {
 		tx.Rollback()
 		return s.makeErrJSON(500, 50001, "update project_user error")
 	}
+	tx.Commit()
 	//只有两个都找不到了才会变成3
 	if s.DB.Where(&Process{ProjectID: oldworker.ProjectID, ManagerID: oldworker.WorkerID}).Find(&Process{}).RowsAffected == 0 {
 		if s.DB.Where(&Worker{ProjectID: oldworker.ProjectID, WorkerID: oldworker.WorkerID}).Find(&Worker{}).RowsAffected == 0 {
