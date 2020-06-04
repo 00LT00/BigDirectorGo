@@ -180,8 +180,6 @@ func (s *Service) SetManager(c *gin.Context) (int, interface{}) {
 		tx.Rollback()
 		return s.makeErrJSON(500, 50000, "update error")
 	}
-	tx.Commit()
-	tx.Begin()
 	//查找原来的管理员是否还有其他任职
 	if s.DB.Where(&Process{ProjectID: process.ProjectID, ManagerID: oldManagerID}).Find(&Process{}).RowsAffected == 0 {
 		if s.DB.Where(&Worker{ProjectID: process.ProjectID, WorkerID: oldManagerID}).Find(&Worker{}).RowsAffected == 0 {
