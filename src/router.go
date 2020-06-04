@@ -125,6 +125,9 @@ func (s *Service) initRouter() {
 	file.GET("/wxacode/:projectid", func(c *gin.Context) {
 		c.JSON(s.GetWxacodeBuffer(c))
 	})
+	file.POST("/excel", func(c *gin.Context) {
+		c.JSON(s.GetExcel(c))
+	})
 
 	/*测试区*/
 	//fmt.Println(s.GetOpenID("043VcuII1MHmF30qFcGI1YM5II1VcuI3"))

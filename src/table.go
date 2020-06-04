@@ -41,8 +41,8 @@ func (Project_User) TableName() string {
 //环节表
 type Process struct {
 	Order       int64  `gorm:"not null" json:"order" binding:"required"`
-	ProcessID   string `gorm:"not null;type:varchar(40)" json:"process_id" binding:"required"` //流程id 自己生成
-	ProcessName string `gorm:"not null" json:"process_name" binding:"required"`
+	ProcessID   string `gorm:"not null;type:varchar(40)" json:"process_id" binding:"-"` //流程id 自己生成
+	ProcessName string `gorm:"not null" json:"process_name" binding:"-"`
 	ProcessType int64  `gorm:"not null" json:"process_type" binding:"required"`
 	MicHand     int64  `json:"mic_hand" binding:"-"` //可选
 	MicEar      int64  `json:"mic_ear" binding:"-"`  //可选
@@ -53,6 +53,14 @@ type Process struct {
 
 //环节类型
 var ProcessTypeArr = [6]string{"节目", "互动", "颁奖", "致辞", "开场", "结束"}
+var ProcessTypeMap = map[string]int64{
+	"节目": 0,
+	"互动": 1,
+	"颁奖": 2,
+	"致辞": 3,
+	"开场": 4,
+	"结束": 5,
+}
 
 //数据字典
 var RoleTable = map[interface{}]interface{}{
@@ -86,6 +94,6 @@ type Manager struct {
 type ProjectStatus struct {
 	gorm.Model   `json:"-"`
 	ProjectID    string `json:"project_id" gorm:"not null" binding:"required"`
-	ProcessIndex *int    `json:"process_index" gorm:"not null" binding:"required"`
+	ProcessIndex *int   `json:"process_index" gorm:"not null" binding:"required"`
 	Flag         *bool  `json:"flag" gorm:"not null" binding:"required"`
 }
