@@ -49,11 +49,11 @@ func (s *Service) SetWorker(c *gin.Context) (int, interface{}) {
 	//只有两个都找不到了才会变成3
 	if s.DB.Where(&Process{ProjectID: oldworker.ProjectID, ManagerID: oldworker.WorkerID}).Find(&Process{}).RowsAffected == 0 {
 		if s.DB.Where(&Worker{ProjectID: oldworker.ProjectID, WorkerID: oldworker.WorkerID}).Find(&Worker{}).RowsAffected == 0 {
-			if tx.Model(&Project_User{}).
+			if err := tx.Model(&Project_User{}).
 				Where(&Project_User{ProjectID: oldworker.ProjectID, UserID: oldworker.WorkerID}).
-				Updates(&Project_User{Role: RoleTable["member"].(int)}).RowsAffected != 1 {
+				Updates(&Project_User{Role: RoleTable["member"].(int)}).Error; err != nil {
 				tx.Rollback()
-				return s.makeErrJSON(500, 50001, "clear manager role error")
+				return s.makeErrJSON(500, 50001, err.Error())
 			}
 		}
 	}

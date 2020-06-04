@@ -184,11 +184,11 @@ func (s *Service) SetManager(c *gin.Context) (int, interface{}) {
 	//查找原来的管理员是否还有其他任职
 	if s.DB.Where(&Process{ProjectID: process.ProjectID, ManagerID: oldManagerID}).Find(&Process{}).RowsAffected == 0 {
 		if s.DB.Where(&Worker{ProjectID: process.ProjectID, WorkerID: oldManagerID}).Find(&Worker{}).RowsAffected == 0 {
-			if tx.Model(&Project_User{}).
+			if err := tx.Model(&Project_User{}).
 				Where(&Project_User{ProjectID: process.ProjectID, UserID: oldManagerID}).
-				Updates(&Project_User{Role: RoleTable["member"].(int)}).RowsAffected != 1 {
+				Updates(&Project_User{Role: RoleTable["member"].(int)}).Error; err != nil {
 				tx.Rollback()
-				return s.makeErrJSON(500, 50001, "clear manager role error")
+				return s.makeErrJSON(500, 50001, err.Error())
 			}
 		}
 	}
