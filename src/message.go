@@ -43,7 +43,7 @@ func (s *Service) ActionStart(c *gin.Context) (int, interface{}) {
 
 	//获取项目所有人员
 	users := make([]Project_User, 50, 100) // 其实写不写大小，在做完find后自动就更改了，作者懒的改了
-	s.DB.Where(&Project_User{ProjectID: projectid}).Where("role <> ?", 1).Find(&users)
+	s.DB.Where(&Project_User{ProjectID: projectid}). /*Where("role <> ?", 1).*/ Find(&users)
 	project := new(Project)
 	if s.DB.Where(&Project{ProjectID: start_map.Projectid}).Find(project).RowsAffected == 1 {
 		return s.makeErrJSON(500, 50005, "get project error")
