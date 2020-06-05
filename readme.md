@@ -52,6 +52,8 @@ var ProcessTypeArr = [6]string{"节目", "互动", "颁奖", "致辞", "开场",
     - [获取项目状态](#获取项目状态)
   - [二维码 `/file`](#二维码-file)
     - [获取项目二维码](#获取项目二维码)
+  - [订阅消息 `/send`](#订阅消息-send)
+    - [给所有人发开始消息](#给所有人发开始消息)
 
 ## 用户 `/user`
 
@@ -793,5 +795,42 @@ var ProcessTypeArr = [6]string{"节目", "互动", "颁奖", "致辞", "开场",
 
 ### 给所有人发开始消息
 
-格式：POST
+格式：POST `/`
+
+- 示例 `/send/`
+
+  ```json
+  {
+      "userid": "oOMHn5cOgOWgxgGBVhjoWFQvSrLY",
+      "projectid": "ab55a1db-4cac-4db2-aadf-fcec513f77dc"
+  }
+  ```
+
+- 返回
+
+  ```json
+  {
+      "data": [
+          {
+              "Userid": "789456",
+              "errcode": 40003,
+              "errmsg": "invalid openid hint: [g6ywVA0934shc2]"
+          },
+          {
+              "Userid": "123456",
+              "errcode": 40003,
+              "errmsg": "invalid openid hint: [3_5INa09341519]"
+          },
+          {
+              "Userid": "12111",
+              "errcode": 40003,
+              "errmsg": "invalid openid hint: [jclQ.A0934d452]"
+          }
+      ], //这里只有失败的id和失败原因
+      "error": 0,
+      "msg": "success"
+  }
+  ```
+
+  
 
