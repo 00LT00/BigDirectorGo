@@ -216,6 +216,41 @@ func (s Service) GetProjectProcess(c *gin.Context) (int, interface{}) {
 	return s.makeSuccessJSON(processes)
 }
 
-//func (s *Service) DeleteProject(c *gin.Context) (int, interface{}) {
-//
-//}
+func (s *Service) DeleteProject(c *gin.Context) (int, interface{}) {
+	projectid := c.Param("projectid")
+	userid := c.Query("userid")
+	role, err := s.checkProject(projectid, userid)
+	if err != nil {
+		return s.makeErrJSON(403, 40301, err.Error())
+	} else if role != 1 {
+		return s.makeErrJSON(403, 40301, "is not director")
+	}
+	tx := s.DB.Begin()
+
+	if err := tx.Where(&Project{ProjectID: projectid, DirectorUserID: userid}).Delete(&Project{}).Error; err != nil {
+		tx.Rollback()
+		return s.makeErrJSON(500, 50000, err.Error())
+	}
+
+	if err := tx.Where(&Project_User{ProjectID: projectid}).Delete(&Project_User{}).Error; err != nil {
+		tx.Rollback()
+		return s.makeErrJSON(500, 50001, err.Error())
+	}
+
+	if err := tx.Where(&ProjectStatus{ProjectID: projectid}).Delete(&ProjectStatus{}).Error; err != nil {
+		tx.Rollback()
+		return s.makeErrJSON(500, 50002, err.Error())
+	}
+
+	if err := tx.Where(&Process{ProjectID: projectid}).Delete(&Process{}).Error; err != nil {
+		tx.Rollback()
+		return s.makeErrJSON(500, 50003, err.Error())
+	}
+
+	if err := tx.Where(&Worker{ProjectID: projectid}).Delete(&Worker{}).Error; err != nil {
+		tx.Rollback()
+		return s.makeErrJSON(500, 50004, err.Error())
+	}
+	tx.Commit()
+	return s.makeSuccessJSON(projectid + " delete success")
+}

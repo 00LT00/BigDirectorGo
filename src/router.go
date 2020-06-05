@@ -65,6 +65,10 @@ func (s *Service) initRouter() {
 	project.GET("/process/:projectid", func(c *gin.Context) {
 		c.JSON(s.GetProjectProcess(c))
 	})
+	//删除项目
+	project.DELETE("/:projectid", func(c *gin.Context) {
+		c.JSON(s.DeleteProject(c))
+	})
 
 	// 环节路由
 	process := r.Group("/process")
