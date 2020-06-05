@@ -181,8 +181,8 @@ func (s *Service) SetManager(c *gin.Context) (int, interface{}) {
 		return s.makeErrJSON(500, 50000, "update error")
 	}
 	//查找原来的管理员是否还有其他任职
-	if s.DB.Where(&Process{ProjectID: process.ProjectID, ManagerID: oldManagerID}).Find(&Process{}).RowsAffected == 0 {
-		if s.DB.Where(&Worker{ProjectID: process.ProjectID, WorkerID: oldManagerID}).Find(&Worker{}).RowsAffected == 0 {
+	if tx.Where(&Process{ProjectID: process.ProjectID, ManagerID: oldManagerID}).Find(&Process{}).RowsAffected == 0 {
+		if tx.Where(&Worker{ProjectID: process.ProjectID, WorkerID: oldManagerID}).Find(&Worker{}).RowsAffected == 0 {
 			if err := tx.Model(&Project_User{}).
 				Where(&Project_User{ProjectID: process.ProjectID, UserID: oldManagerID}).
 				Updates(&Project_User{Role: RoleTable["member"].(int)}).Error; err != nil {
