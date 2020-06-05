@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -19,7 +18,9 @@ type User struct {
 
 //项目表
 type Project struct {
-	gorm.Model
+	ID             uint `gorm:"primary_key"`
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
 	DirectorUserID string `form:"userid" json:"userid" binding:"required" gorm:"not null"`
 	Name           string `form:"name" json:"name" binding:"required" gorm:"not null;type:varchar(20)"`
 	ProjectID      string `binding:"-" gorm:"not null;unique;unique_index;type:varchar(40)"`
@@ -27,7 +28,9 @@ type Project struct {
 
 //权限表
 type Project_User struct {
-	gorm.Model
+	ID        uint `gorm:"primary_key"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 	UserID    string `gorm:"not null" json:"userid" form:"userid" binding:"required"`
 	ProjectID string `gorm:"not null" json:"projectid" form:"projectid" binding:"required"`
 	Role      int    `gorm:"not null" json:"-" form:"-"`
@@ -92,8 +95,10 @@ type Manager struct {
 }
 
 type ProjectStatus struct {
-	gorm.Model   `json:"-"`
-	ProjectID    string `json:"project_id" gorm:"not null" binding:"required"`
-	ProcessIndex *int   `json:"process_index" gorm:"not null" binding:"required"`
-	Flag         *bool  `json:"flag" gorm:"not null" binding:"required"`
+	ID           uint      `gorm:"primary_key" json:"-"`
+	CreatedAt    time.Time `json:"-"`
+	UpdatedAt    time.Time `json:"-"`
+	ProjectID    string    `json:"project_id" gorm:"not null" binding:"required"`
+	ProcessIndex *int      `json:"process_index" gorm:"not null" binding:"required"`
+	Flag         *bool     `json:"flag" gorm:"not null" binding:"required"`
 }

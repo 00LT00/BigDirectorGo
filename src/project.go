@@ -15,7 +15,7 @@ import (
 //  0 无关人员
 
 func (s *Service) checkProject(projectid string, userid ...string) (int, error) {
-	if projectid == "" || s.DB.Find(&Project{}, Project{ProjectID: projectid}).RowsAffected == 0 {
+	if projectid == "" || s.DB.Where(&Project{ProjectID: projectid}).Find(&Project{}).RowsAffected == 0 {
 		//项目不存在
 		return -1, errors.New("none project")
 	}
