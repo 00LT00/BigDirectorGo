@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/gin-gonic/gin"
 	"strconv"
@@ -41,29 +40,43 @@ func (s *Service) GetExcel(c *gin.Context) (int, interface{}) {
 		process := new(excelProcess)
 		process.Order = int64(k)
 
+		if _, ok := ProcessTypeMap[row[0]]; !ok {
+			return s.makeErrJSON(500, 50001, "A"+strconv.Itoa(k+1)+" 为空")
+		}
 		processType, err := strconv.Atoi(row[0])
 		process.ProcessType = int64(processType)
 		if err != nil {
 			process.ProcessType = ProcessTypeMap[row[0]]
 		}
 		if process.ProcessType < 0 || process.ProcessType > 5 {
-			return s.makeErrJSON(500, 50001, errors.New("A"+string('1'+k)+" error"))
+			return s.makeErrJSON(500, 50001, "A"+strconv.Itoa(k+1)+" 填写错误，请正确填写")
 		}
 
 		process.ProcessName = row[1]
 
-		micHand, err := strconv.Atoi(row[2])
-		if err != nil {
-			return s.makeErrJSON(500, 50002, errors.New("C"+string('1'+k)+" error"))
+		if row[2] == "" {
+			process.MicHand = 0
+		} else {
+			micHand, err := strconv.Atoi(row[2])
+			if err != nil {
+				return s.makeErrJSON(500, 50001, "C"+strconv.Itoa(k+1)+" 不是数字，请正确填写")
+			}
+			process.MicHand = int64(micHand)
 		}
-		process.MicHand = int64(micHand)
 
-		micEar, err := strconv.Atoi(row[3])
-		if err != nil {
-			return s.makeErrJSON(500, 50003, errors.New("D"+string('1'+k)+" error"))
+		if row[3] == "" {
+			process.MicEar = 0
+		} else {
+			micEar, err := strconv.Atoi(row[3])
+			if err != nil {
+				return s.makeErrJSON(500, 50001, "D"+strconv.Itoa(k+1)+" 不是数字，请正确填写")
+			}
+			process.MicEar = int64(micEar)
 		}
-		process.MicEar = int64(micEar)
 
+		if len(row[4]) > 100 {
+			return s.makeErrJSON(500, 50001, "E"+strconv.Itoa(k+1)+" 备注过长，请勿超过100字")
+		}
 		process.Remark = row[4]
 
 		processes = append(processes, process)
