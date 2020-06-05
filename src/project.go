@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"io"
@@ -253,4 +254,47 @@ func (s *Service) DeleteProject(c *gin.Context) (int, interface{}) {
 	}
 	tx.Commit()
 	return s.makeSuccessJSON(projectid + " delete success")
+}
+
+func (s *Service) DeleteProjectUser(c *gin.Context) (int, interface{}) {
+	projectid := c.Param("projectid")
+	requestJson := new(struct {
+		UserID   string `json:"user_id" binding:"required"`
+		ToUserID string `json:"to_user_id" binding:"required"`
+	})
+	err := c.ShouldBind(requestJson)
+	if err != nil {
+		return s.makeErrJSON(403, 40301, err.Error())
+	}
+	role, err := s.checkProject(projectid, requestJson.UserID)
+	if err != nil {
+		return s.makeErrJSON(403, 40302, err.Error())
+	}
+	if role == 1 && requestJson.ToUserID != requestJson.UserID { // 导演不能删除自己
+		return s.deleteUser(requestJson.ToUserID, projectid)
+	} else if (role > 1 && role <= 7) && requestJson.UserID == requestJson.ToUserID { //其他人只能删除自己
+		return s.deleteUser(requestJson.ToUserID, projectid)
+	} else {
+		return s.makeErrJSON(404, 40400, "user or to user error")
+	}
+}
+
+func (s *Service) deleteUser(userid string, projectid string) (int, interface{}) {
+	tx := s.DB.Begin()
+	if err := tx.Where(&Project_User{ProjectID: projectid, UserID: userid}).Delete(&Project_User{}).Error; err != nil {
+		tx.Rollback()
+		return s.makeErrJSON(500, 50000, err.Error())
+	}
+
+	if err := tx.Where(&Process{ProjectID: projectid, ManagerID: userid}).Delete(&Process{}).Error; err != nil {
+		tx.Rollback()
+		return s.makeErrJSON(500, 50001, err.Error())
+	}
+
+	if err := tx.Where(&Worker{ProjectID: projectid, WorkerID: userid}).Delete(&Worker{}).Error; err != nil {
+		tx.Rollback()
+		return s.makeErrJSON(500, 50002, err.Error())
+	}
+	tx.Commit()
+	return s.makeSuccessJSON(fmt.Sprintf("delete %s from %s", userid, projectid))
 }

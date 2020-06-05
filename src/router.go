@@ -49,6 +49,10 @@ func (s *Service) initRouter() {
 	project.POST("/member/", func(c *gin.Context) {
 		c.JSON(s.AddMember(c))
 	})
+	//删除项目中的用户
+	project.POST("/delete/:projectid", func(c *gin.Context) {
+		c.JSON(s.DeleteProjectUser(c))
+	})
 	// 获取项目的用户
 	project.GET("/user/", func(c *gin.Context) {
 		c.JSON(s.GetProjectUser(c))
