@@ -40,6 +40,7 @@ var ProcessTypeArr = [6]string{"节目", "互动", "颁奖", "致辞", "开场",
     - [修改项目导演](#修改项目导演)
     - [为项目增加成员](#为项目增加成员)
     - [获取项目的所有成员](#获取项目的所有成员)
+    - [删除项目](#删除项目)
   - [环节 `/process`](#环节-process)
     - [获取环节详情](#获取环节详情)
     - [修改环节信息](#修改环节信息)
@@ -422,6 +423,26 @@ var ProcessTypeArr = [6]string{"节目", "互动", "颁奖", "致辞", "开场",
       "msg": "success"
   }
   ```
+
+
+
+### 删除项目
+
+格式：DELETE `/{{projectid}}{{userid=?}}`
+
+- 示例 `/project/f3852e84-130a-4ab8-be69-7fae2628ba3a?userid=12111`
+
+- 返回
+
+  ```json
+  {
+      "data": "f3852e84-130a-4ab8-be69-7fae2628ba3a delete success",
+      "error": 0,
+      "msg": "success"
+  }
+  ```
+
+  
 
 
 
