@@ -21,7 +21,7 @@ type User struct {
 type Project struct {
 	gorm.Model
 	DirectorUserID string `form:"userid" json:"userid" binding:"required" gorm:"not null"`
-	Name           string `form:"name" json:"name" binding:"required" gorm:"not null"`
+	Name           string `form:"name" json:"name" binding:"required" gorm:"not null;type:varchar(20)"`
 	ProjectID      string `binding:"-" gorm:"not null;unique;unique_index;type:varchar(40)"`
 }
 

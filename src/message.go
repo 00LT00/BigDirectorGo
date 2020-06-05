@@ -11,16 +11,12 @@ import (
 const SendUrl string = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send"
 
 type startmap struct {
-	Userid    string `json:"userid"`
+	Userid    string `json:"userid" binding:"required"`
 	Projectid string `json:"projectid"`
-	CurProc   struct {
-		Type  int64  `json:"type"`
-		Name  string `json:"name"`
-		Index int64  `json:"index"`
-	}
 }
 
 func (s *Service) ActionStart(c *gin.Context) (int, interface{}) {
+	//微信小程序推送模板
 	template := "tuLTzAObhYDJYKxuowlx1pt5SyGLq2cCiZKqcZXZ2pw"
 	token, err := s.GetToken()
 	if err != nil {
@@ -48,6 +44,10 @@ func (s *Service) ActionStart(c *gin.Context) (int, interface{}) {
 	//获取项目所有人员
 	users := make([]Project_User, 50, 100) // 其实写不写大小，在做完find后自动就更改了，作者懒的改了
 	s.DB.Where(&Project_User{ProjectID: projectid}).Find(&users)
+	project := new(Project)
+	if s.DB.Where(&Project{ProjectID: start_map.Projectid}).Find(project).RowsAffected == 1 {
+		return s.makeErrJSON(500, 50005, "get project error")
+	}
 
 	//通过这两个方法从连接池中获取一个空的实例，可以实现连接复用，提高性能
 	req := fasthttp.AcquireRequest()
@@ -86,12 +86,7 @@ func (s *Service) ActionStart(c *gin.Context) (int, interface{}) {
 				wait.Done()
 			}()
 			//活动标题
-			var name string
-			if start_map.CurProc.Type == 0 {
-				name = fmt.Sprintf("环节%d-节目-%s", start_map.CurProc.Index, start_map.CurProc.Name)
-			} else {
-				name = fmt.Sprintf("环节%d-%s", start_map.CurProc.Index, ProcessTypeArr[start_map.CurProc.Type])
-			}
+			name := fmt.Sprintf("%s", project.Name)
 			//构造发送推送的map // 不要问我为什么这么写，我也不知道我为什么要一次性套娃全套掉。。。
 			sendmap := struct {
 				Touser      string `json:"touser"`
@@ -122,7 +117,7 @@ func (s *Service) ActionStart(c *gin.Context) (int, interface{}) {
 					Thing5: struct {
 						Value string `json:"value"`
 					}{
-						Value: "该环节即将开始，请相关人员做好准备！",
+						Value: "晚会已经开始，请相关人员做好准备！",
 					},
 				},
 			}

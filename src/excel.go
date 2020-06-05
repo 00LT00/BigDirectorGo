@@ -41,7 +41,7 @@ func (s *Service) GetExcel(c *gin.Context) (int, interface{}) {
 		process.Order = int64(k)
 
 		if _, ok := ProcessTypeMap[row[0]]; !ok {
-			return s.makeErrJSON(500, 50001, "A"+strconv.Itoa(k+1)+" 为空")
+			return s.makeErrJSON(500, 50001, "A"+strconv.Itoa(k+1)+" 填写错误，请正确填写")
 		}
 		processType, err := strconv.Atoi(row[0])
 		process.ProcessType = int64(processType)
@@ -49,7 +49,7 @@ func (s *Service) GetExcel(c *gin.Context) (int, interface{}) {
 			process.ProcessType = ProcessTypeMap[row[0]]
 		}
 		if process.ProcessType < 0 || process.ProcessType > 5 {
-			return s.makeErrJSON(500, 50001, "A"+strconv.Itoa(k+1)+" 填写错误，请正确填写")
+			return s.makeErrJSON(500, 50002, "A"+strconv.Itoa(k+1)+" 填写错误，请正确填写")
 		}
 
 		process.ProcessName = row[1]
@@ -59,7 +59,7 @@ func (s *Service) GetExcel(c *gin.Context) (int, interface{}) {
 		} else {
 			micHand, err := strconv.Atoi(row[2])
 			if err != nil {
-				return s.makeErrJSON(500, 50001, "C"+strconv.Itoa(k+1)+" 不是数字，请正确填写")
+				return s.makeErrJSON(500, 50003, "C"+strconv.Itoa(k+1)+" 不是数字，请正确填写")
 			}
 			process.MicHand = int64(micHand)
 		}
@@ -69,13 +69,13 @@ func (s *Service) GetExcel(c *gin.Context) (int, interface{}) {
 		} else {
 			micEar, err := strconv.Atoi(row[3])
 			if err != nil {
-				return s.makeErrJSON(500, 50001, "D"+strconv.Itoa(k+1)+" 不是数字，请正确填写")
+				return s.makeErrJSON(500, 50004, "D"+strconv.Itoa(k+1)+" 不是数字，请正确填写")
 			}
 			process.MicEar = int64(micEar)
 		}
 
 		if len(row[4]) > 100 {
-			return s.makeErrJSON(500, 50001, "E"+strconv.Itoa(k+1)+" 备注过长，请勿超过100字")
+			return s.makeErrJSON(500, 50005, "E"+strconv.Itoa(k+1)+" 备注过长，请勿超过100字")
 		}
 		process.Remark = row[4]
 
