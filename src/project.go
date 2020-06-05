@@ -215,3 +215,7 @@ func (s Service) GetProjectProcess(c *gin.Context) (int, interface{}) {
 
 	return s.makeSuccessJSON(processes)
 }
+
+func (s *Service) DeleteProject(c *gin.Context) (int, interface{}) {
+
+}
