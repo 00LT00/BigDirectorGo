@@ -41,6 +41,7 @@ var ProcessTypeArr = [6]string{"节目", "互动", "颁奖", "致辞", "开场",
     - [为项目增加成员](#为项目增加成员)
     - [获取项目的所有成员](#获取项目的所有成员)
     - [删除项目](#删除项目)
+    - [删除项目中的成员](#删除项目中的成员)
   - [环节 `/process`](#环节-process)
     - [获取环节详情](#获取环节详情)
     - [修改环节信息](#修改环节信息)
@@ -437,6 +438,32 @@ var ProcessTypeArr = [6]string{"节目", "互动", "颁奖", "致辞", "开场",
   ```json
   {
       "data": "f3852e84-130a-4ab8-be69-7fae2628ba3a delete success",
+      "error": 0,
+      "msg": "success"
+  }
+  ```
+
+
+
+
+### 删除项目中的成员
+
+格式：POST `/delete/{{projectid}}`
+
+- 示例 `/project/delete/c9c6ce1b-b581-4815-9788-5cc413640ac8`
+
+  ```json
+  {
+      "user_id": "789456", // 执行操作的人，其他人不能删除除了自己以外的人
+      "to_user_id": "12111" // 被删除的人，不能是导演自己
+  }
+  ```
+
+- 返回
+
+  ```json
+  {
+      "data": "delete 123456 from c9c6ce1b-b581-4815-9788-5cc413640ac8",
       "error": 0,
       "msg": "success"
   }
