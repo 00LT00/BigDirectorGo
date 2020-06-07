@@ -102,3 +102,11 @@ type ProjectStatus struct {
 	ProcessIndex *int      `json:"process_index" gorm:"not null" binding:"required"`
 	Flag         *bool     `json:"flag" gorm:"not null" binding:"required"`
 }
+
+type FeedBack struct {
+	ID         uint      `gorm:"primary_key" json:"-"`
+	CreatedAt  time.Time `json:"-"`
+	UpdatedAt  time.Time `json:"-"`
+	FeedBackID string    `json:"-"`
+	Msg        string    `json:"msg"`
+}

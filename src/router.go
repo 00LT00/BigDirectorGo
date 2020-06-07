@@ -137,6 +137,13 @@ func (s *Service) initRouter() {
 		c.JSON(s.GetExcel(c))
 	})
 
+	//反馈
+	feedback :=r.Group("/feedback")
+	//发送反馈
+	feedback.POST("/", func(c *gin.Context) {
+		c.JSON(s.GetFeedBack(c))
+	})
+
 	/*测试区*/
 	//fmt.Println(s.GetOpenID("043VcuII1MHmF30qFcGI1YM5II1VcuI3"))
 	//fmt.Println(s.GetToken())

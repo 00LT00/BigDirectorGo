@@ -18,3 +18,5 @@
 
 /.idea/
 src/config/weixin.toml
+
+*.xlsx
