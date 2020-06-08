@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/gin-gonic/gin"
 	"strconv"
+	"unicode"
 )
 
 type excelProcess struct {
@@ -52,7 +54,22 @@ func (s *Service) GetExcel(c *gin.Context) (int, interface{}) {
 			return s.makeErrJSON(500, 50002, "A"+strconv.Itoa(k+1)+" 填写错误，请正确填写")
 		}
 
-		process.ProcessName = row[1]
+		name := row[1]
+		chineseCount := 0
+		for k, v := range name {
+			if unicode.Is(unicode.Han, v) {
+				chineseCount++
+				fmt.Println(string(name[k : k+3]))
+				fmt.Println(k)
+			}
+		}
+
+		fmt.Println(len(name) - chineseCount*3 + chineseCount)
+		if len(name)-chineseCount*3+chineseCount <= 15 {
+			process.ProcessName = name
+		} else {
+			return s.makeErrJSON(500, 50006, "B"+strconv.Itoa(k+1)+"过长，请勿超过15个字符(中英等长)")
+		}
 
 		if row[2] == "" {
 			process.MicHand = 0
