@@ -42,7 +42,7 @@ func (s *Service) GetUser(c *gin.Context) (int, interface{}) {
 
 //仅用于修改用户时绑定使用
 type UpdateUser struct {
-	UserId   string `form:"openid" binding:"required" json:"openid" gorm:"primary_key;type:varchar(30);not null;unique"`
+	UserId   string `form:"openid" binding:"required" json:"openid" gorm:"primary_key;type:varchar(40);not null;unique"`
 	UserName string `form:"username" binding:"-" json:"username" gorm:"not null"`
 	PhoneNum string `form:"phonenum" binding:"-" json:"phonenum" gorm:"not null"`
 	Avatar   string `form:"avatar" binding:"-" json:"avatar" gorm:"not null"`
