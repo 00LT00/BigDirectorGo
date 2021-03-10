@@ -1,17 +1,21 @@
 [Server]
 Port=":12307"
-key="spppk"
+Sign="spppk"
 [DB]
 Addr = "localhost"
+Port = "3306"
 User = "director"
 Pass = "akdbJnaKApJfxsrd"
 DBName = "bigdirector"
 [DBDev]
 Addr = "localhost"
+Port = "3306"
 User = "root"
-Pass = "123456"
+Pass = "root"
 DBName = "bigdirector"
 [Redis]
 Addr = "localhost:6379"
 Pass = ""
 DB = 0
+[Casbin]
+Model = "config/model.conf"
