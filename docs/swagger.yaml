@@ -1,6 +1,9 @@
 basePath: api.zerokirin.online/api/BigDirector
 info:
-  contact: {}
+  contact:
+    email: lightning@zerokirin.online
+    name: 00LT00
+    url: http://blog.zerokirin.online
   description: 我是大导演API
   title: BigDirector API
   version: "2.0"

@@ -18,7 +18,11 @@ var doc = `{
     "info": {
         "description": "{{.Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "contact": {
+            "name": "00LT00",
+            "url": "http://blog.zerokirin.online",
+            "email": "lightning@zerokirin.online"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",

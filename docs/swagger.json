@@ -3,7 +3,11 @@
     "info": {
         "description": "我是大导演API",
         "title": "BigDirector API",
-        "contact": {},
+        "contact": {
+            "name": "00LT00",
+            "url": "http://blog.zerokirin.online",
+            "email": "lightning@zerokirin.online"
+        },
         "version": "2.0"
     },
     "basePath": "api.zerokirin.online/api/BigDirector",
