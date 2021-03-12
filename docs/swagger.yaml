@@ -1,0 +1,8 @@
+basePath: api.zerokirin.online/api/BigDirector
+info:
+  contact: {}
+  description: 我是大导演API
+  title: BigDirector API
+  version: "2.0"
+paths: {}
+swagger: "2.0"

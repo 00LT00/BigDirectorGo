@@ -31,5 +31,6 @@ func init() {
 	logger.InfoLog.Println("load config successful")
 	Service = initService()
 	logger.InfoLog.Println("load service successful")
+	initSwagger()
 
 }

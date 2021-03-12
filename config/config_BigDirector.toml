@@ -1,5 +1,5 @@
 [Server]
-Port=":12307"
+Port=":12309"
 Sign="spppk"
 [DB]
 Addr = "localhost"
