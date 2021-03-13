@@ -2,6 +2,10 @@ package main
 
 import (
 	"BigDirector/app"
+	_ "BigDirector/error"
+	_ "BigDirector/log"
+	_ "BigDirector/service"
+	_ "BigDirector/utils"
 )
 
 // @title BigDirector API
@@ -12,7 +16,8 @@ import (
 // @contact.url http://blog.zerokirin.online
 // @contact.email lightning@zerokirin.online
 
-// @BasePath /api/BigDirector
+// @host api.zerokirin.online
+// @BasePath /BigDirector
 func main() {
 
 	app.Register()

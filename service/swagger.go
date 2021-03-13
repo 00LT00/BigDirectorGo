@@ -6,10 +6,11 @@ import (
 )
 
 func initSwagger() {
-	cmd := exec.Command("swag", "init","--parseDependency","-g","./main.go","-o","../docs")
+	cmd := exec.Command("swag", "init","--parseDependency","-g","./cmd/main.go")
 	cmd.Stdout = logger.InfoLog.Writer()
 	cmd.Stderr = logger.InfoLog.Writer()
-	err := cmd.Run()
+	err := cmd.Start()
+	err = cmd.Wait()
 	if err != nil {
 		logger.ErrLog.Println(err)
 	}

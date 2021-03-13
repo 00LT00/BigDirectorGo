@@ -17,5 +17,4 @@
 # vendor/
 .idea/
 config/wx.toml
-docs/
 

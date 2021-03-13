@@ -1,16 +1,26 @@
-basePath: /api/BigDirector
+basePath: /BigDirector
 definitions:
-  utils.ResponseStruct:
+  utils.FailureResponse:
+    properties:
+      error:
+        example: "500"
+        type: string
+      msg:
+        example: err msg
+        type: string
+    type: object
+  utils.SuccessResponse:
     properties:
       data:
         type: object
       error:
-        example: 0
-        type: integer
+        example: "0"
+        type: string
       msg:
         example: success
         type: string
     type: object
+host: api.zerokirin.online
 info:
   contact:
     email: lightning@zerokirin.online
@@ -34,13 +44,18 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: openID
           schema:
-            $ref: '#/definitions/utils.ResponseStruct'
+            allOf:
+            - $ref: '#/definitions/utils.SuccessResponse'
+            - properties:
+                data:
+                  type: string
+              type: object
         "500":
-          description: Internal Server Error
+          description: error request
           schema:
-            $ref: '#/definitions/utils.ResponseStruct'
+            $ref: '#/definitions/utils.FailureResponse'
       summary: get openID
       tags:
       - user

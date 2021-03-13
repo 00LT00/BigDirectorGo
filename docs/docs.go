@@ -50,15 +50,27 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "openID",
                         "schema": {
-                            "$ref": "#/definitions/utils.ResponseStruct"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "error request",
                         "schema": {
-                            "$ref": "#/definitions/utils.ResponseStruct"
+                            "$ref": "#/definitions/utils.FailureResponse"
                         }
                     }
                 }
@@ -66,15 +78,28 @@ var doc = `{
         }
     },
     "definitions": {
-        "utils.ResponseStruct": {
+        "utils.FailureResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "500"
+                },
+                "msg": {
+                    "type": "string",
+                    "example": "err msg"
+                }
+            }
+        },
+        "utils.SuccessResponse": {
             "type": "object",
             "properties": {
                 "data": {
                     "type": "object"
                 },
                 "error": {
-                    "type": "integer",
-                    "example": 0
+                    "type": "string",
+                    "example": "0"
                 },
                 "msg": {
                     "type": "string",
@@ -97,8 +122,8 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "2.0",
-	Host:        "",
-	BasePath:    "/api/BigDirector",
+	Host:        "api.zerokirin.online",
+	BasePath:    "/BigDirector",
 	Schemes:     []string{},
 	Title:       "BigDirector API",
 	Description: "我是大导演API",
