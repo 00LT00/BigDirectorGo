@@ -29,11 +29,20 @@ type config struct {
 	DBDev  database
 	Casbin casbin
 	Server server
+	Wx     weixin
+}
+
+type weixin struct {
+	AppID     string
+	AppSecret string
 }
 
 func initConfig() *config {
 	dir, err := os.Getwd()
 	conf := new(config)
+	wx := new(struct { //toml第一层结构体不被解析
+		WeiXin weixin
+	})
 	if err != nil {
 		panic(error2.NewError(err.Error(), ""))
 	}
@@ -41,5 +50,10 @@ func initConfig() *config {
 	if err != nil {
 		panic(error2.NewError(err.Error(), ""))
 	}
+	_, err = toml.DecodeFile(filepath.Join(dir, *weixinConfigFilePath), wx)
+	if err != nil {
+		panic(error2.NewError(err.Error(), ""))
+	}
+	conf.Wx = wx.WeiXin
 	return conf
 }

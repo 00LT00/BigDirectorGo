@@ -13,7 +13,8 @@ var (
 
 var (
 	//配置文件地址
-	configFilePath = flag.String("c", "config/config_BigDirector.toml", "config file")
+	configFilePath       = flag.String("c", "config/config_BigDirector.toml", "config file")
+	weixinConfigFilePath = flag.String("wx", "config/wx.toml", "config file")
 )
 
 func init() {

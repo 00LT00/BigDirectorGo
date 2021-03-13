@@ -12,3 +12,9 @@ func MakeErrJSON(httpStatusCode int, ErrorCode string, msg interface{}) (int, in
 func MakeSuccessJSON(data interface{}) (int, interface{}) {
 	return 200, &gin.H{"error": 0, "msg": "success", "data": data}
 }
+
+type SuccessResp struct {
+	Error int         `json:"error" example:"0"`
+	Msg   string      `json:"msg" example:"success"`
+	Data  interface{} `json:"data" example:""`
+}

@@ -1,7 +1,9 @@
 package gin
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
-func ping(c *gin.Context) interface{} {
+func ping(*gin.Context) interface{} {
 	return ""
 }

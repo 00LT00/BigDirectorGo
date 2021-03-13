@@ -1,12 +1,17 @@
 package gin
 
 import (
+	"BigDirector/app/internal/user"
 	"BigDirector/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func initRouter(r *gin.Engine) {
-	r.Group("/")
+	userRouter := r.Group("/user")
+	{
+		userRouter.GET("/openID", f(user.OpenID))
+
+	}
 
 }
 

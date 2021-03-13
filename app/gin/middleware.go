@@ -2,6 +2,7 @@ package gin
 
 import (
 	error2 "BigDirector/error"
+	logger "BigDirector/log"
 	"BigDirector/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -20,8 +21,10 @@ func HttpRecover(c *gin.Context) {
 		if r := recover(); r != nil {
 			if e, ok := r.(error2.HttpError); ok {
 				c.AbortWithStatusJSON(utils.MakeErrJSON(e.HttpStatusCode, e.Err.ErrCode, e.Err.Msg))
+			} else {
+				c.AbortWithStatusJSON(utils.MakeErrJSON(500, "50000", "service error"))
 			}
-			c.AbortWithStatusJSON(utils.MakeErrJSON(500, "50000", "service error"))
+			logger.ErrLog.Println("[GINERROR]:%+V", r)
 		}
 	}()
 	c.Next()

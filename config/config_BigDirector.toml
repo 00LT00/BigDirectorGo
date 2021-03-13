@@ -1,6 +1,6 @@
 [Server]
-Port=":12309"
-Sign="spppk"
+Port = ":12309"
+Sign = "spppk"
 [DB]
 Addr = "localhost"
 Port = "3306"
