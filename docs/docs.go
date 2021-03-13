@@ -46,6 +46,13 @@ var doc = `{
                         "name": "code",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "spppk",
+                        "name": "sign",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
