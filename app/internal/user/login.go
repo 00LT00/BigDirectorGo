@@ -13,7 +13,7 @@ import (
 // @ID get-openID
 // @Produce  json
 // @Param code query string true "wx.login()获取的code"
-// @Param sign header string true "spppk"
+// @Param sign header string true "spppk" default("spppk")
 // @Success 200 {object} utils.SuccessResponse{data=string} "openID"
 // @Failure 500 {object} utils.FailureResponse "error request"
 // @Router /user/openID [get]

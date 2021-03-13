@@ -40,7 +40,8 @@ paths:
         name: code
         required: true
         type: string
-      - description: spppk
+      - default: '"spppk"'
+        description: spppk
         in: header
         name: sign
         required: true
