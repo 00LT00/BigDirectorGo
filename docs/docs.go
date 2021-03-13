@@ -49,8 +49,8 @@ var doc = `{
                     },
                     {
                         "type": "string",
-                        "default": "\"spppk\"",
-                        "description": "spppk",
+                        "default": "spppk",
+                        "description": "check header",
                         "name": "sign",
                         "in": "header",
                         "required": true
