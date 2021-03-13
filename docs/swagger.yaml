@@ -1,25 +1,4 @@
 basePath: /BigDirector
-definitions:
-  utils.FailureResponse:
-    properties:
-      error:
-        example: "500"
-        type: string
-      msg:
-        example: err msg
-        type: string
-    type: object
-  utils.SuccessResponse:
-    properties:
-      data:
-        type: object
-      error:
-        example: "0"
-        type: string
-      msg:
-        example: success
-        type: string
-    type: object
 host: api.zerokirin.online
 info:
   contact:
@@ -29,39 +8,5 @@ info:
   description: 我是大导演API
   title: BigDirector API
   version: "2.0"
-paths:
-  /user:
-    get:
-      description: get openID from Weixin
-      operationId: get-openID
-      parameters:
-      - description: wx.login()获取的code
-        in: query
-        name: code
-        required: true
-        type: string
-      - description: spppk
-        in: header
-        name: sign
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: openID
-          schema:
-            allOf:
-            - $ref: '#/definitions/utils.SuccessResponse'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "500":
-          description: error request
-          schema:
-            $ref: '#/definitions/utils.FailureResponse'
-      summary: get openID
-      tags:
-      - user
+paths: {}
 swagger: "2.0"
