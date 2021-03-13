@@ -1,4 +1,16 @@
-basePath: api.zerokirin.online/api/BigDirector
+basePath: /api/BigDirector
+definitions:
+  utils.ResponseStruct:
+    properties:
+      data:
+        type: object
+      error:
+        example: 0
+        type: integer
+      msg:
+        example: success
+        type: string
+    type: object
 info:
   contact:
     email: lightning@zerokirin.online
@@ -7,5 +19,29 @@ info:
   description: 我是大导演API
   title: BigDirector API
   version: "2.0"
-paths: {}
+paths:
+  /user:
+    get:
+      description: get openID from Weixin
+      operationId: get-openID
+      parameters:
+      - description: wx.login()获取的code
+        in: query
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+      summary: get openID
+      tags:
+      - user
 swagger: "2.0"

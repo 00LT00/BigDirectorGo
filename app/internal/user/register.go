@@ -12,8 +12,8 @@ import (
 // @ID get-openID
 // @Produce  json
 // @Param code query string true "wx.login()获取的code"
-// @Success 200 {object} utils.SuccessResp
-// @Failure 500 {string} ""
+// @Success 200 {object} utils.ResponseStruct
+// @Failure 500 {object} utils.ResponseStruct
 // @Router /user [get]
 func OpenID(c *gin.Context) interface{} {
 	code := c.Query("code")

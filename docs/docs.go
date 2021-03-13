@@ -27,7 +27,62 @@ var doc = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/user": {
+            "get": {
+                "description": "get openID from Weixin",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "get openID",
+                "operationId": "get-openID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "wx.login()获取的code",
+                        "name": "code",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ResponseStruct"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ResponseStruct"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "utils.ResponseStruct": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object"
+                },
+                "error": {
+                    "type": "integer",
+                    "example": 0
+                },
+                "msg": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        }
+    }
 }`
 
 type swaggerInfo struct {
@@ -43,7 +98,7 @@ type swaggerInfo struct {
 var SwaggerInfo = swaggerInfo{
 	Version:     "2.0",
 	Host:        "",
-	BasePath:    "api.zerokirin.online/api/BigDirector",
+	BasePath:    "/api/BigDirector",
 	Schemes:     []string{},
 	Title:       "BigDirector API",
 	Description: "我是大导演API",
