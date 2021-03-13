@@ -12,5 +12,92 @@
     },
     "host": "api.zerokirin.online",
     "basePath": "/BigDirector",
-    "paths": {}
+    "paths": {
+        "/user/openID": {
+            "get": {
+                "description": "get openID from Weixin",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "get openID",
+                "operationId": "get-openID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "wx.login()获取的code",
+                        "name": "code",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "spppk",
+                        "name": "sign",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "openID",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "error request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "utils.FailureResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "500"
+                },
+                "msg": {
+                    "type": "string",
+                    "example": "err msg"
+                }
+            }
+        },
+        "utils.SuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object"
+                },
+                "error": {
+                    "type": "string",
+                    "example": "0"
+                },
+                "msg": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        }
+    }
 }

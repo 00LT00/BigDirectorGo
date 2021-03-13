@@ -4,6 +4,7 @@ import (
 	error2 "BigDirector/error"
 	logger "BigDirector/log"
 	"flag"
+	"os/exec"
 )
 
 var (
@@ -27,6 +28,15 @@ func init() {
 			}
 		}
 	}()
+	if !*logger.Mode {
+		cmd := exec.Command("lsof -i:12309 | awk 'NR>1 {print $2}'|xargs kill -9")
+		cmd.Stdout = logger.InfoLog.Writer()
+		cmd.Stderr = logger.InfoLog.Writer()
+		err := cmd.Run()
+		if err != nil {
+			logger.ErrLog.Println(err)
+		}
+	}
 
 	Conf = initConfig()
 	logger.InfoLog.Println("load config successful")
