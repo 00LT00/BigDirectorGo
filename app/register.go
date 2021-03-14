@@ -1,6 +1,7 @@
 package app
 
 import (
+	"BigDirector/app/database"
 	"BigDirector/app/gin"
 	logger "BigDirector/log"
 	"BigDirector/service"
@@ -12,6 +13,7 @@ var (
 )
 
 func Register() {
+	database.Register()
 	gin.Register()
 }
 

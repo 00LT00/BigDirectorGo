@@ -28,6 +28,73 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/user/info": {
+            "put": {
+                "description": "create or update user information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "create or update user information",
+                "operationId": "set-Info",
+                "parameters": [
+                    {
+                        "description": "用户的openID",
+                        "name": "openID",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/database.User"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "default": "spppk",
+                        "description": "check header",
+                        "name": "sign",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "40001 param error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "service error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user/openID": {
             "get": {
                 "description": "get openID from Weixin",
@@ -75,8 +142,14 @@ var doc = `{
                             ]
                         }
                     },
+                    "400": {
+                        "description": "code null",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    },
                     "500": {
-                        "description": "error request",
+                        "description": "service error",
                         "schema": {
                             "$ref": "#/definitions/utils.FailureResponse"
                         }
@@ -86,16 +159,36 @@ var doc = `{
         }
     },
     "definitions": {
+        "database.User": {
+            "type": "object",
+            "required": [
+                "openID"
+            ],
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "openID": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
         "utils.FailureResponse": {
             "type": "object",
             "properties": {
                 "error": {
                     "type": "string",
-                    "example": "500"
+                    "example": "50000"
                 },
                 "msg": {
                     "type": "string",
-                    "example": "err msg"
+                    "example": "service error"
                 }
             }
         },

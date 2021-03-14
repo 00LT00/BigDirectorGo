@@ -14,13 +14,12 @@ func MakeSuccessJSON(data interface{}) (int, interface{}) {
 }
 
 type SuccessResponse struct {
-	Error string         `json:"error" example:"0"`
+	Error string      `json:"error" example:"0"`
 	Msg   string      `json:"msg" example:"success"`
 	Data  interface{} `json:"data" example:""`
 }
 
 type FailureResponse struct {
-	Error string         `json:"error" example:"500"`
-	Msg   string      `json:"msg" example:"err msg"`
+	Error string `json:"error" example:"50000"`
+	Msg   string `json:"msg" example:"service error"`
 }
-

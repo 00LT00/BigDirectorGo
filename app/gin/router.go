@@ -7,11 +7,18 @@ import (
 )
 
 func initRouter(r *gin.Engine) {
-	userRouter := r.Group("/user")
+	userR := r.Group("/user")
 	{
-		userRouter.GET("/openID", f(user.OpenID))
-
+		//获取openID
+		userR.GET("/openID", f(user.OpenID))
+		//更新用户详情
+		userR.PUT("/info", f(user.SetInfo))
 	}
+	//performanceR :=r.Group("/performance")
+	//{
+	//	performanceR.PUT("/info",f())
+	//	performanceR.GET("/info",f())
+	//}
 
 }
 

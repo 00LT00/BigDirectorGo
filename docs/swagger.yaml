@@ -1,12 +1,25 @@
 basePath: /BigDirector
 definitions:
+  database.User:
+    properties:
+      avatar:
+        type: string
+      name:
+        type: string
+      openID:
+        type: string
+      phone:
+        type: string
+    required:
+    - openID
+    type: object
   utils.FailureResponse:
     properties:
       error:
-        example: "500"
+        example: "50000"
         type: string
       msg:
-        example: err msg
+        example: service error
         type: string
     type: object
   utils.SuccessResponse:
@@ -30,6 +43,48 @@ info:
   title: BigDirector API
   version: "2.0"
 paths:
+  /user/info:
+    put:
+      consumes:
+      - application/json
+      description: create or update user information
+      operationId: set-Info
+      parameters:
+      - description: 用户的openID
+        in: body
+        name: openID
+        required: true
+        schema:
+          $ref: '#/definitions/database.User'
+      - default: spppk
+        description: check header
+        in: header
+        name: sign
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.SuccessResponse'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: 40001 param error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+        "500":
+          description: service error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+      summary: create or update user information
+      tags:
+      - user
   /user/openID:
     get:
       description: get openID from Weixin
@@ -58,8 +113,12 @@ paths:
                 data:
                   type: string
               type: object
+        "400":
+          description: code null
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
         "500":
-          description: error request
+          description: service error
           schema:
             $ref: '#/definitions/utils.FailureResponse'
       summary: get openID
