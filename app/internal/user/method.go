@@ -14,7 +14,7 @@ var db = service.Service.DB
 // @Tags user
 // @Summary get openID
 // @Description get openID from Weixin
-// @ID get-openID
+// @ID get-OpenID
 // @Produce  json
 // @Param code query string true "wx.login()获取的code"
 // @Param sign header string true "check header" default(spppk)
@@ -61,7 +61,7 @@ func SetInfo(c *gin.Context) interface{} {
 // @Tags user
 // @Summary get user information
 // @Description get user information by openID
-// @ID get-user-Info
+// @ID get-User-Info
 // @Produce  json
 // @Param openID query string true "openID"
 // @Param sign header string true "check header" default(spppk)
