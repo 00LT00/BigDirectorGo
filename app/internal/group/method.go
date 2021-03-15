@@ -121,7 +121,7 @@ func GetInfo(c *gin.Context) interface{} {
 // @Success 200 {object} utils.SuccessResponse{data=string} "success"
 // @Failure 400 {object} utils.FailureResponse "40001 param error"
 // @Failure 500 {object} utils.FailureResponse "service error"
-// @Router /group/info [put]
+// @Router /group/roles [put]
 func SetRoles(c *gin.Context) interface{} {
 	g := new(database.Group)
 	if err := c.ShouldBindJSON(g); err != nil {

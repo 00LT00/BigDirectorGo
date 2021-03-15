@@ -150,6 +150,48 @@ paths:
     put:
       consumes:
         - application/json
+      description: create or update group information
+      operationId: set-Group-Info
+      parameters:
+        - description: 组信息 performanceID必填, GroupID空则为新建, leaderID选填（组长的openID）
+          in: body
+          name: process
+          required: true
+          schema:
+            $ref: '#/definitions/database.Group'
+        - default: spppk
+          description: check header
+          in: header
+          name: sign
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: GroupID
+          schema:
+            allOf:
+              - $ref: '#/definitions/utils.SuccessResponse'
+              - properties:
+                  data:
+                    type: string
+                type: object
+        "400":
+          description: 40001 param error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+        "500":
+          description: service error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+      summary: 创建或更新工作组
+      tags:
+        - group
+  /group/roles:
+    put:
+      consumes:
+        - application/json
       description: set group roles
       operationId: set-Group-Roles
       parameters:

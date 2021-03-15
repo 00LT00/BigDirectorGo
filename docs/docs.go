@@ -102,6 +102,73 @@ var doc = `{
                 }
             },
             "put": {
+                "description": "create or update group information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "group"
+                ],
+                "summary": "创建或更新工作组",
+                "operationId": "set-Group-Info",
+                "parameters": [
+                    {
+                        "description": "组信息 performanceID必填, GroupID空则为新建, leaderID选填（组长的openID）",
+                        "name": "process",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/database.Group"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "default": "spppk",
+                        "description": "check header",
+                        "name": "sign",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "GroupID",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "40001 param error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "service error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/group/roles": {
+            "put": {
                 "description": "set group roles",
                 "consumes": [
                     "application/json"
