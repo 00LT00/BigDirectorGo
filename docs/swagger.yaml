@@ -1,5 +1,45 @@
 basePath: /BigDirector
 definitions:
+  database.Group:
+    properties:
+      groupID:
+        type: string
+      leaderID:
+        type: string
+      name:
+        type: string
+      performanceID:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+    required:
+      - performanceID
+    type: object
+  database.Performance:
+    properties:
+      duration:
+        type: string
+      introduce:
+        type: string
+      listImage:
+        type: string
+      name:
+        type: string
+      performanceID:
+        type: string
+      place:
+        type: string
+      posterImage:
+        type: string
+      sponsor:
+        type: string
+      startTime:
+        type: string
+    required:
+      - name
+    type: object
   database.User:
     properties:
       avatar:
@@ -43,17 +83,229 @@ info:
   title: BigDirector API
   version: "2.0"
 paths:
-  /user/info:
+  /group/info:
+    get:
+      description: get group information
+      operationId: get-Group-Info
+      parameters:
+        - description: groupID 必填
+          in: query
+          name: groupID
+          required: true
+          type: string
+        - default: spppk
+          description: check header
+          in: header
+          name: sign
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: 小组详情，其中roles是权限
+          schema:
+            allOf:
+              - $ref: '#/definitions/utils.SuccessResponse'
+              - properties:
+                  data:
+                    allOf:
+                      - $ref: '#/definitions/database.Group'
+                      - properties:
+                          Leader:
+                            $ref: '#/definitions/database.User'
+                        type: object
+                type: object
+        "400":
+          description: 40001 param error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+        "500":
+          description: service error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+      summary: 获取小组信息
+      tags:
+        - performance
     put:
       consumes:
-      - application/json
-      description: create or update user information
-      operationId: set-Info
+        - application/json
+      description: create or update group information
+      operationId: set-Group-Info
       parameters:
-      - description: 用户的openID
-        in: body
-        name: openID
-        required: true
+        - description: 组信息 performanceID必填, GroupID空则为新建, leaderID选填（组长的openID）
+          in: body
+          name: process
+          required: true
+          schema:
+            $ref: '#/definitions/database.Group'
+        - default: spppk
+          description: check header
+          in: header
+          name: sign
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: GroupID
+          schema:
+            allOf:
+              - $ref: '#/definitions/utils.SuccessResponse'
+              - properties:
+                  data:
+                    type: string
+                type: object
+        "400":
+          description: 40001 param error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+        "500":
+          description: service error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+      summary: 创建或更新工作组
+      tags:
+        - group
+  /performance/info:
+    get:
+      description: get performance information
+      operationId: get-Performance-Info
+      parameters:
+        - description: performanceID 必填
+          in: query
+          name: performanceID
+          required: true
+          type: string
+        - default: spppk
+          description: check header
+          in: header
+          name: sign
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: 演出详情
+          schema:
+            allOf:
+              - $ref: '#/definitions/utils.SuccessResponse'
+              - properties:
+                  data:
+                    $ref: '#/definitions/database.Performance'
+                type: object
+        "400":
+          description: 40001 param error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+        "500":
+          description: service error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+      summary: 获取演出信息
+      tags:
+        - performance
+    put:
+      consumes:
+        - application/json
+      description: createPerformance or update performance information
+      operationId: set-Performance-Info
+      parameters:
+        - description: 演出信息，创建时ID为空, name必填
+          in: body
+          name: performance
+          required: true
+          schema:
+            $ref: '#/definitions/database.Performance'
+        - description: 创建人或者导演组一员的openID 必填
+          in: query
+          name: openID
+          required: true
+          type: string
+        - default: spppk
+          description: check header
+          in: header
+          name: sign
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: 只返回performanceID
+          schema:
+            allOf:
+              - $ref: '#/definitions/utils.SuccessResponse'
+              - properties:
+                  data:
+                    type: string
+                type: object
+        "400":
+          description: 40001 param error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+        "403":
+          description: 40301 can't set performance
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+        "500":
+          description: service error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+      summary: 创建或更改演出信息
+      tags:
+        - performance
+  /user/info:
+    get:
+      description: get user information by openID
+      operationId: get-User-Info
+      parameters:
+        - description: openID
+          in: query
+          name: openID
+          required: true
+          type: string
+        - default: spppk
+          description: check header
+          in: header
+          name: sign
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: UserInfo
+          schema:
+            allOf:
+              - $ref: '#/definitions/utils.SuccessResponse'
+              - properties:
+                  data:
+                    $ref: '#/definitions/database.User'
+                type: object
+        "400":
+          description: openID null
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+        "500":
+          description: service error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+      summary: 获取用户信息
+      tags:
+        - user
+    put:
+      consumes:
+        - application/json
+      description: create or update user information
+      operationId: set-User-Info
+      parameters:
+        - description: 用户的openID
+          in: body
+          name: openID
+          required: true
         schema:
           $ref: '#/definitions/database.User'
       - default: spppk
@@ -82,13 +334,13 @@ paths:
           description: service error
           schema:
             $ref: '#/definitions/utils.FailureResponse'
-      summary: create or update user information
+      summary: 创建或更改用户信息
       tags:
       - user
   /user/openID:
     get:
       description: get openID from Weixin
-      operationId: get-openID
+      operationId: get-OpenID
       parameters:
       - description: wx.login()获取的code
         in: query
@@ -121,7 +373,7 @@ paths:
           description: service error
           schema:
             $ref: '#/definitions/utils.FailureResponse'
-      summary: get openID
+      summary: 获取openID
       tags:
       - user
 swagger: "2.0"

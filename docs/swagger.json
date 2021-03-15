@@ -13,7 +13,346 @@
     "host": "api.zerokirin.online",
     "basePath": "/BigDirector",
     "paths": {
+        "/group/info": {
+            "get": {
+                "description": "get group information",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "performance"
+                ],
+                "summary": "获取小组信息",
+                "operationId": "get-Group-Info",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "groupID 必填",
+                        "name": "groupID",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "spppk",
+                        "description": "check header",
+                        "name": "sign",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "小组详情，其中roles是权限",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/definitions/database.Group"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "Leader": {
+                                                            "$ref": "#/definitions/database.User"
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "40001 param error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "service error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "create or update group information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "group"
+                ],
+                "summary": "创建或更新工作组",
+                "operationId": "set-Group-Info",
+                "parameters": [
+                    {
+                        "description": "组信息 performanceID必填, GroupID空则为新建, leaderID选填（组长的openID）",
+                        "name": "process",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/database.Group"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "default": "spppk",
+                        "description": "check header",
+                        "name": "sign",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "GroupID",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "40001 param error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "service error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/performance/info": {
+            "get": {
+                "description": "get performance information",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "performance"
+                ],
+                "summary": "获取演出信息",
+                "operationId": "get-Performance-Info",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "performanceID 必填",
+                        "name": "performanceID",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "spppk",
+                        "description": "check header",
+                        "name": "sign",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "演出详情",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/database.Performance"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "40001 param error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "service error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "createPerformance or update performance information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "performance"
+                ],
+                "summary": "创建或更改演出信息",
+                "operationId": "set-Performance-Info",
+                "parameters": [
+                    {
+                        "description": "演出信息，创建时ID为空, name必填",
+                        "name": "performance",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/database.Performance"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "创建人或者导演组一员的openID 必填",
+                        "name": "openID",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "spppk",
+                        "description": "check header",
+                        "name": "sign",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "只返回performanceID",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "40001 param error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "40301 can't set performance",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "service error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user/info": {
+            "get": {
+                "description": "get user information by openID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "获取用户信息",
+                "operationId": "get-User-Info",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "openID",
+                        "name": "openID",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "spppk",
+                        "description": "check header",
+                        "name": "sign",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "UserInfo",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/database.User"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "openID null",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "service error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    }
+                }
+            },
             "put": {
                 "description": "create or update user information",
                 "consumes": [
@@ -25,8 +364,8 @@
                 "tags": [
                     "user"
                 ],
-                "summary": "create or update user information",
-                "operationId": "set-Info",
+                "summary": "创建或更改用户信息",
+                "operationId": "set-User-Info",
                 "parameters": [
                     {
                         "description": "用户的openID",
@@ -89,8 +428,8 @@
                 "tags": [
                     "user"
                 ],
-                "summary": "get openID",
-                "operationId": "get-openID",
+                "summary": "获取openID",
+                "operationId": "get-OpenID",
                 "parameters": [
                     {
                         "type": "string",
@@ -144,6 +483,67 @@
         }
     },
     "definitions": {
+        "database.Group": {
+            "type": "object",
+            "required": [
+                "performanceID"
+            ],
+            "properties": {
+                "groupID": {
+                    "type": "string"
+                },
+                "leaderID": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "performanceID": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "database.Performance": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "duration": {
+                    "type": "string"
+                },
+                "introduce": {
+                    "type": "string"
+                },
+                "listImage": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "performanceID": {
+                    "type": "string"
+                },
+                "place": {
+                    "type": "string"
+                },
+                "posterImage": {
+                    "type": "string"
+                },
+                "sponsor": {
+                    "type": "string"
+                },
+                "startTime": {
+                    "type": "string"
+                }
+            }
+        },
         "database.User": {
             "type": "object",
             "required": [
