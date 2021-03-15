@@ -63,9 +63,10 @@ func SetInfo(c *gin.Context) interface{} {
 
 func createPerformance(p *database.Performance, u *database.User) {
 	p.PerformanceID = uuid.NewV4().String()
+	p.Users = []*database.User{u}
 	tx := s.DB.Begin()
 	//创建演出
-	if err := s.DB.Create(p).Error; err != nil {
+	if err := tx.Create(p).Error; err != nil {
 		tx.Rollback()
 		panic(err.Error())
 	}
