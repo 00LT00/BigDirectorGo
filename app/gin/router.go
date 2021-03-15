@@ -1,6 +1,7 @@
 package gin
 
 import (
+	"BigDirector/app/internal/group"
 	"BigDirector/app/internal/performance"
 	"BigDirector/app/internal/user"
 	"BigDirector/utils"
@@ -23,6 +24,13 @@ func initRouter(r *gin.Engine) {
 		performanceR.PUT("/info", f(performance.SetInfo))
 		//获取演出详情
 		performanceR.GET("/info", f(performance.GetInfo))
+	}
+	groupR := r.Group("/group")
+	{
+		//创建小组
+		groupR.PUT("/info", f(group.SetInfo))
+		//获取小组详情
+		groupR.GET("/info", f(group.GetInfo))
 	}
 
 }

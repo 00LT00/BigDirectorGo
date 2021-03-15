@@ -12,7 +12,7 @@ var s = service.Service
 
 // 新建或更新演出信息
 // @Tags performance
-// @Summary createPerformance or update performance information
+// @Summary 创建或更改演出信息
 // @Description createPerformance or update performance information
 // @ID set-Performance-Info
 // @Accept json
@@ -96,7 +96,7 @@ func createPerformance(p *database.Performance, u *database.User) {
 
 // 获取演出详情
 // @Tags performance
-// @Summary get performance information
+// @Summary 获取演出信息
 // @Description get performance information
 // @ID get-Performance-Info
 // @Produce  json

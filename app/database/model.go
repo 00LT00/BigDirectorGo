@@ -15,9 +15,9 @@ type Performance struct {
 	PosterImage   string `json:"posterImage"`
 	ListImage     string `json:"listImage"`
 
-	Processes []Process `json:"processes,omitempty" gorm:"foreignKey:PerformanceID;references:PerformanceID;constraint:OnUpdate:CASCADE" swaggerignore:"true"` // have many
-	Groups    []Group   `json:"groups,omitempty" gorm:"foreignKey:PerformanceID;references:PerformanceID;constraint:OnUpdate:CASCADE" swaggerignore:"true"`    // have many
-	Users     []*User   `json:"users,omitempty" gorm:"many2many:performance_users" swaggerignore:"true"`
+	Processes []*Process `json:"processes,omitempty" gorm:"foreignKey:PerformanceID;references:PerformanceID;constraint:OnUpdate:CASCADE" swaggerignore:"true"` // have many
+	Groups    []*Group   `json:"groups,omitempty" gorm:"foreignKey:PerformanceID;references:PerformanceID;constraint:OnUpdate:CASCADE" swaggerignore:"true"`    // have many
+	Users     []*User    `json:"users,omitempty" gorm:"many2many:performance_users" swaggerignore:"true"`                                                       // many2many
 
 	CreatedAt int            `json:"-" swaggerignore:"true"`
 	UpdatedAt int            `json:"-" swaggerignore:"true"`
@@ -33,8 +33,7 @@ type Process struct {
 	Mic    string `json:"mic"`
 	Remark string `json:"remark"`
 
-	//User          User        `gorm:"references:OpenID;constraint:OnUpdate:CASCADE"`
-	Performance Performance `json:"performance,omitempty" gorm:"references:PerformanceID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" swaggerignore:"true"`
+	Performance *Performance `json:"performance,omitempty" gorm:"references:PerformanceID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" swaggerignore:"true"` //belongs to
 
 	CreatedAt int            `json:"-" swaggerignore:"true"`
 	UpdatedAt int            `json:"-" swaggerignore:"true"`
@@ -57,10 +56,13 @@ type User struct {
 
 type Group struct {
 	GroupID       string `json:"groupID" gorm:"type:varchar(40);primaryKey"`
-	PerformanceID string `json:"performanceID" gorm:"type:varchar(40);unique"`
+	PerformanceID string `json:"performanceID" binding:"required" gorm:"type:varchar(40);unique"`
 	Name          string `json:"name"`
+	LeaderID      string `json:"leaderID" gorm:"type:varchar(40);unique"`
 
-	Users []*User `json:"users,omitempty" gorm:"many2many:group_users" swaggerignore:"true"` // many2many
+	Leader *User    `json:"leader,omitempty" binding:"-" gorm:"foreignKey:LeaderID;references:OpenID;constraint:OnUpdate:CASCADE" swaggerignore:"true"` //has one
+	Users  []*User  `json:"users,omitempty" gorm:"many2many:group_users" swaggerignore:"true"`                                                          // many2many
+	Roles  []string `json:"roles,omitempty" gorm:"-"`
 
 	CreatedAt int            `json:"-" swaggerignore:"true"`
 	UpdatedAt int            `json:"-" swaggerignore:"true"`

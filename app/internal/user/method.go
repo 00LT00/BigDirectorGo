@@ -12,7 +12,7 @@ var db = service.Service.DB
 
 // 获取openID
 // @Tags user
-// @Summary get openID
+// @Summary 获取openID
 // @Description get openID from Weixin
 // @ID get-OpenID
 // @Produce  json
@@ -32,7 +32,7 @@ func OpenID(c *gin.Context) interface{} {
 
 // 新建或更新用户信息
 // @Tags user
-// @Summary create or update user information
+// @Summary 创建或更改用户信息
 // @Description create or update user information
 // @ID set-User-Info
 // @Accept json
@@ -59,7 +59,7 @@ func SetInfo(c *gin.Context) interface{} {
 
 // 获取用户信息
 // @Tags user
-// @Summary get user information
+// @Summary 获取用户信息
 // @Description get user information by openID
 // @ID get-User-Info
 // @Produce  json
