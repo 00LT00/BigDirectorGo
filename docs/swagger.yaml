@@ -278,10 +278,50 @@ paths:
       tags:
         - performance
   /process/list:
+    get:
+      description: get process list
+      operationId: get-Process-List
+      parameters:
+        - description: performanceID 必填
+          in: query
+          name: performanceID
+          required: true
+          type: string
+        - default: spppk
+          description: check header
+          in: header
+          name: sign
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: 环节列表
+          schema:
+            allOf:
+              - $ref: '#/definitions/utils.SuccessResponse'
+              - properties:
+                  data:
+                    items:
+                      $ref: '#/definitions/database.Process'
+                    type: array
+                type: object
+        "400":
+          description: 40001 param error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+        "500":
+          description: service error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+      summary: 获取全部环节信息
+      tags:
+        - process
     put:
       consumes:
         - application/json
-      description: create or update process information
+      description: create or update process list
       operationId: set-Process-List
       parameters:
         - description: process结构体数组 performanceID必须一致且存在

@@ -293,8 +293,71 @@
             }
         },
         "/process/list": {
+            "get": {
+                "description": "get process list",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "process"
+                ],
+                "summary": "获取全部环节信息",
+                "operationId": "get-Process-List",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "performanceID 必填",
+                        "name": "performanceID",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "spppk",
+                        "description": "check header",
+                        "name": "sign",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "环节列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/database.Process"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "40001 param error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "service error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    }
+                }
+            },
             "put": {
-                "description": "create or update process information",
+                "description": "create or update process list",
                 "consumes": [
                     "application/json"
                 ],
