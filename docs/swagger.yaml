@@ -40,6 +40,24 @@ definitions:
     required:
       - name
     type: object
+  database.Process:
+    properties:
+      mic:
+        type: string
+      name:
+        description: OpenID        string `gorm:"type:varchar(40);unique"`
+        type: string
+      performanceID:
+        type: string
+      processID:
+        type: string
+      props:
+        type: string
+      remark:
+        type: string
+    required:
+      - performanceID
+    type: object
   database.User:
     properties:
       avatar:
@@ -126,14 +144,14 @@ paths:
             $ref: '#/definitions/utils.FailureResponse'
       summary: 获取小组信息
       tags:
-        - performance
+        - group
     put:
       consumes:
         - application/json
-      description: create or update group information
-      operationId: set-Group-Info
+      description: set group roles
+      operationId: set-Group-Roles
       parameters:
-        - description: 组信息 performanceID必填, GroupID空则为新建, leaderID选填（组长的openID）
+        - description: performanceID必填, groupID必填, roles是字符串数组, 只有这三个参数有意义，其余可忽略
           in: body
           name: process
           required: true
@@ -149,7 +167,7 @@ paths:
         - application/json
       responses:
         "200":
-          description: GroupID
+          description: success
           schema:
             allOf:
               - $ref: '#/definitions/utils.SuccessResponse'
@@ -165,7 +183,7 @@ paths:
           description: service error
           schema:
             $ref: '#/definitions/utils.FailureResponse'
-      summary: 创建或更新工作组
+      summary: 设置权限
       tags:
         - group
   /performance/info:
@@ -257,6 +275,50 @@ paths:
       summary: 创建或更改演出信息
       tags:
         - performance
+  /process/info:
+    put:
+      consumes:
+        - application/json
+      description: create or update process information
+      operationId: set-Process-Info
+      parameters:
+        - description: process结构体数组
+          in: body
+          name: process
+          required: true
+          schema:
+            items:
+              $ref: '#/definitions/database.Process'
+            type: array
+        - default: spppk
+          description: check header
+          in: header
+          name: sign
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: 只返回performanceID
+          schema:
+            allOf:
+              - $ref: '#/definitions/utils.SuccessResponse'
+              - properties:
+                  data:
+                    type: string
+                type: object
+        "400":
+          description: 40001 param error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+        "500":
+          description: service error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+      summary: 创建或更改环节信息
+      tags:
+        - process
   /user/info:
     get:
       description: get user information by openID
@@ -306,14 +368,14 @@ paths:
           in: body
           name: openID
           required: true
-        schema:
-          $ref: '#/definitions/database.User'
-      - default: spppk
-        description: check header
-        in: header
-        name: sign
-        required: true
-        type: string
+          schema:
+            $ref: '#/definitions/database.User'
+        - default: spppk
+          description: check header
+          in: header
+          name: sign
+          required: true
+          type: string
       produces:
       - application/json
       responses:

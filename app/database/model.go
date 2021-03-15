@@ -26,12 +26,13 @@ type Performance struct {
 
 type Process struct {
 	ProcessID     string `json:"processID" gorm:"type:varchar(40);primaryKey"`
-	PerformanceID string `json:"performanceID" binding:"required" gorm:"type:varchar(40);unique"`
+	PerformanceID string `json:"performanceID" binding:"required" gorm:"type:varchar(40);"`
 	//OpenID        string `gorm:"type:varchar(40);unique"`
 	Name   string `json:"name"`
 	Props  string `json:"props"`
 	Mic    string `json:"mic"`
 	Remark string `json:"remark"`
+	Order  int    `json:"order"`
 
 	Performance *Performance `json:"performance,omitempty" gorm:"references:PerformanceID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" swaggerignore:"true"` //belongs to
 

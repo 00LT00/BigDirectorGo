@@ -35,7 +35,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "performance"
+                    "group"
                 ],
                 "summary": "获取小组信息",
                 "operationId": "get-Group-Info",
@@ -102,7 +102,7 @@ var doc = `{
                 }
             },
             "put": {
-                "description": "create or update group information",
+                "description": "set group roles",
                 "consumes": [
                     "application/json"
                 ],
@@ -112,11 +112,11 @@ var doc = `{
                 "tags": [
                     "group"
                 ],
-                "summary": "创建或更新工作组",
-                "operationId": "set-Group-Info",
+                "summary": "设置权限",
+                "operationId": "set-Group-Roles",
                 "parameters": [
                     {
-                        "description": "组信息 performanceID必填, GroupID空则为新建, leaderID选填（组长的openID）",
+                        "description": "performanceID必填, groupID必填, roles是字符串数组, 只有这三个参数有意义，其余可忽略",
                         "name": "process",
                         "in": "body",
                         "required": true,
@@ -135,7 +135,7 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "GroupID",
+                        "description": "success",
                         "schema": {
                             "allOf": [
                                 {
@@ -294,6 +294,76 @@ var doc = `{
                     },
                     "403": {
                         "description": "40301 can't set performance",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "service error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/process/info": {
+            "put": {
+                "description": "create or update process information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "process"
+                ],
+                "summary": "创建或更改环节信息",
+                "operationId": "set-Process-Info",
+                "parameters": [
+                    {
+                        "description": "process结构体数组",
+                        "name": "process",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/database.Process"
+                            }
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "default": "spppk",
+                        "description": "check header",
+                        "name": "sign",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "只返回performanceID",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "40001 param error",
                         "schema": {
                             "$ref": "#/definitions/utils.FailureResponse"
                         }
@@ -555,6 +625,33 @@ var doc = `{
                     "type": "string"
                 },
                 "startTime": {
+                    "type": "string"
+                }
+            }
+        },
+        "database.Process": {
+            "type": "object",
+            "required": [
+                "performanceID"
+            ],
+            "properties": {
+                "mic": {
+                    "type": "string"
+                },
+                "name": {
+                    "description": "OpenID        string ` + "`" + `gorm:\"type:varchar(40);unique\"` + "`" + `",
+                    "type": "string"
+                },
+                "performanceID": {
+                    "type": "string"
+                },
+                "processID": {
+                    "type": "string"
+                },
+                "props": {
+                    "type": "string"
+                },
+                "remark": {
                     "type": "string"
                 }
             }

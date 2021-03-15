@@ -3,6 +3,7 @@ package gin
 import (
 	"BigDirector/app/internal/group"
 	"BigDirector/app/internal/performance"
+	"BigDirector/app/internal/process"
 	"BigDirector/app/internal/user"
 	"BigDirector/utils"
 	"github.com/gin-gonic/gin"
@@ -33,6 +34,10 @@ func initRouter(r *gin.Engine) {
 		groupR.GET("/info", f(group.GetInfo))
 		//设置权限（roles）
 		groupR.PUT("/roles", f(group.SetRoles))
+	}
+	processR := r.Group("/process")
+	{
+		processR.PUT("/info", f(process.SetInfo))
 	}
 
 }
