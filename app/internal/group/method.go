@@ -79,7 +79,7 @@ func updatePolicy(g *database.Group) error {
 }
 
 // 获取小组详情
-// @Tags performance
+// @Tags group
 // @Summary 获取小组信息
 // @Description get group information
 // @ID get-Group-Info
@@ -107,4 +107,28 @@ func GetInfo(c *gin.Context) interface{} {
 	}
 	g.Roles = roles
 	return g
+}
+
+// 设置权限（roles）
+// @Tags group
+// @Summary 设置权限
+// @Description set group roles
+// @ID set-Group-Roles
+// @Accept json
+// @Produce  json
+// @Param process body database.Group true "performanceID必填, groupID必填, roles是字符串数组, 只有这三个参数有意义，其余可忽略"
+// @Param sign header string true "check header" default(spppk)
+// @Success 200 {object} utils.SuccessResponse{data=string} "success"
+// @Failure 400 {object} utils.FailureResponse "40001 param error"
+// @Failure 500 {object} utils.FailureResponse "service error"
+// @Router /group/info [put]
+func SetRoles(c *gin.Context) interface{} {
+	g := new(database.Group)
+	if err := c.ShouldBindJSON(g); err != nil {
+		panic(error2.NewHttpError(400, "40001", err.Error()))
+	}
+	if err := updatePolicy(g); err != nil {
+		panic(err.Error())
+	}
+	return "success"
 }

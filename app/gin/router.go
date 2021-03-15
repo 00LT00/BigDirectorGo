@@ -31,6 +31,8 @@ func initRouter(r *gin.Engine) {
 		groupR.PUT("/info", f(group.SetInfo))
 		//获取小组详情
 		groupR.GET("/info", f(group.GetInfo))
+		//设置权限（roles）
+		groupR.PUT("/roles", f(group.SetRoles))
 	}
 
 }
