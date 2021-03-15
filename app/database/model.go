@@ -6,10 +6,11 @@ import (
 
 type Performance struct {
 	PerformanceID string `json:"performanceID" gorm:"type:varchar(40);primaryKey"`
-	Name          string `json:"name"`
+	Name          string `json:"name" binding:"required"`
 	Place         string `json:"place"`
 	Sponsor       string `json:"sponsor"`
-	Time          string `json:"time"`
+	Duration      string `json:"duration"`
+	StartTime     string `json:"startTime"`
 	Introduce     string `json:"introduce"`
 	PosterImage   string `json:"posterImage"`
 	ListImage     string `json:"listImage"`

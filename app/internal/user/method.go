@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-var s = service.Service
+var db = service.Service.DB
 
 // 获取openID
 // @Tags user
@@ -34,10 +34,10 @@ func OpenID(c *gin.Context) interface{} {
 // @Tags user
 // @Summary create or update user information
 // @Description create or update user information
-// @ID set-Info
+// @ID set-User-Info
 // @Accept json
 // @Produce  json
-// @Param openID body database.User true "用户的openID" "openID"
+// @Param openID body database.User true "用户的openID"
 // @Param sign header string true "check header" default(spppk)
 // @Success 200 {object} utils.SuccessResponse{data=string} "success"
 // @Failure 400 {object} utils.FailureResponse "40001 param error"
@@ -49,10 +49,35 @@ func SetInfo(c *gin.Context) interface{} {
 	if err != nil {
 		panic(error2.NewHttpError(400, "40001", err.Error()))
 	}
-	if err := s.DB.Clauses(clause.OnConflict{ //冲突时更新除主键外的所有值
+	if err := db.Clauses(clause.OnConflict{ //冲突时更新除主键外的所有值
 		UpdateAll: true,
 	}).Create(u).Error; err != nil {
 		panic(err.Error())
 	}
 	return "success"
+}
+
+// 获取用户信息
+// @Tags user
+// @Summary get user information
+// @Description get user information by openID
+// @ID get-user-Info
+// @Produce  json
+// @Param openID query string true "openID"
+// @Param sign header string true "check header" default(spppk)
+// @Success 200 {object} utils.SuccessResponse{data=database.User} "UserInfo"
+// @Failure 400 {object} utils.FailureResponse "openID null"
+// @Failure 500 {object} utils.FailureResponse "service error"
+// @Router /user/info [get]
+func GetInfo(c *gin.Context) interface{} {
+	openID := c.Query("openID")
+	if openID == "" {
+		panic(error2.NewHttpError(400, "40001", "openID null"))
+	}
+	u := new(database.User)
+	u.OpenID = openID
+	if err := db.First(u).Error; err != nil {
+		panic(err.Error())
+	}
+	return u
 }
