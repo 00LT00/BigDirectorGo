@@ -37,7 +37,10 @@ func initRouter(r *gin.Engine) {
 	}
 	processR := r.Group("/process")
 	{
-		processR.PUT("/info", f(process.SetInfo))
+		//设置环节列表
+		processR.PUT("/list", f(process.SetList))
+		//获取环节列表
+		processR.GET("/list", f(process.GetList))
 	}
 
 }

@@ -47,6 +47,8 @@ definitions:
       name:
         description: OpenID        string `gorm:"type:varchar(40);unique"`
         type: string
+      order:
+        type: integer
       performanceID:
         type: string
       processID:
@@ -275,14 +277,14 @@ paths:
       summary: 创建或更改演出信息
       tags:
         - performance
-  /process/info:
+  /process/list:
     put:
       consumes:
         - application/json
       description: create or update process information
-      operationId: set-Process-Info
+      operationId: set-Process-List
       parameters:
-        - description: process结构体数组
+        - description: process结构体数组 performanceID必须一致且存在
           in: body
           name: process
           required: true
@@ -300,7 +302,7 @@ paths:
         - application/json
       responses:
         "200":
-          description: 只返回performanceID
+          description: success
           schema:
             allOf:
               - $ref: '#/definitions/utils.SuccessResponse'
@@ -316,7 +318,7 @@ paths:
           description: service error
           schema:
             $ref: '#/definitions/utils.FailureResponse'
-      summary: 创建或更改环节信息
+      summary: 创建或更改环节信息，包括全部环节
       tags:
         - process
   /user/info:

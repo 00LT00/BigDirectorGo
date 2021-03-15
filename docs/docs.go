@@ -307,7 +307,7 @@ var doc = `{
                 }
             }
         },
-        "/process/info": {
+        "/process/list": {
             "put": {
                 "description": "create or update process information",
                 "consumes": [
@@ -319,11 +319,11 @@ var doc = `{
                 "tags": [
                     "process"
                 ],
-                "summary": "创建或更改环节信息",
-                "operationId": "set-Process-Info",
+                "summary": "创建或更改环节信息，包括全部环节",
+                "operationId": "set-Process-List",
                 "parameters": [
                     {
-                        "description": "process结构体数组",
+                        "description": "process结构体数组 performanceID必须一致且存在",
                         "name": "process",
                         "in": "body",
                         "required": true,
@@ -345,7 +345,7 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "只返回performanceID",
+                        "description": "success",
                         "schema": {
                             "allOf": [
                                 {
@@ -641,6 +641,9 @@ var doc = `{
                 "name": {
                     "description": "OpenID        string ` + "`" + `gorm:\"type:varchar(40);unique\"` + "`" + `",
                     "type": "string"
+                },
+                "order": {
+                    "type": "integer"
                 },
                 "performanceID": {
                     "type": "string"
