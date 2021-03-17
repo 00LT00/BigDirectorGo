@@ -76,6 +76,7 @@ func createPerformance(p *database.Performance, u *database.User) {
 	g := &database.Group{
 		GroupID:       uuid.NewV4().String(),
 		PerformanceID: p.PerformanceID,
+		LeaderID:      u.OpenID,
 		Name:          database.DirectorRole,
 		Users:         []*database.User{u}, //用户默认为导演组人员
 	}

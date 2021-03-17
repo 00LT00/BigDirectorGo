@@ -59,7 +59,7 @@ type Group struct {
 	GroupID       string `json:"groupID" gorm:"type:varchar(40);primaryKey"`
 	PerformanceID string `json:"performanceID" binding:"required" gorm:"type:varchar(40);unique"`
 	Name          string `json:"name"`
-	LeaderID      string `json:"leaderID" gorm:"type:varchar(40);unique"`
+	LeaderID      string `json:"leaderID" gorm:"type:varchar(40);"`
 
 	Leader *User    `json:"leader,omitempty" binding:"-" gorm:"foreignKey:LeaderID;references:OpenID;constraint:OnUpdate:CASCADE" swaggerignore:"true"` //has one
 	Users  []*User  `json:"users,omitempty" gorm:"many2many:group_users" swaggerignore:"true"`                                                          // many2many
