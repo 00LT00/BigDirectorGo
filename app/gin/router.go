@@ -25,6 +25,8 @@ func initRouter(r *gin.Engine) {
 		performanceR.PUT("/info", f(performance.SetInfo))
 		//获取演出详情
 		performanceR.GET("/info", f(performance.GetInfo))
+		//添加用户到演出
+		performanceR.POST("/user", f(performance.AddUser))
 	}
 	groupR := r.Group("/group")
 	{

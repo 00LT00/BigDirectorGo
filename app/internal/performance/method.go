@@ -6,6 +6,7 @@ import (
 	"BigDirector/service"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
+	"gorm.io/gorm/clause"
 )
 
 var s = service.Service
@@ -117,4 +118,41 @@ func GetInfo(c *gin.Context) interface{} {
 		panic(err.Error())
 	}
 	return p
+}
+
+// 绑定用户到演出
+// @Tags performance
+// @Summary 绑定用户到演出
+// @Description add user to performance
+// @ID add-Performance-User
+// @Accept json
+// @Produce  json
+// @Param performance query string true "performanceID必填"
+// @Param users body []database.User true "数组形式"
+// @Param sign header string true "check header" default(spppk)
+// @Success 200 {object} utils.SuccessResponse{data=string} "success"
+// @Failure 400 {object} utils.FailureResponse "40001 param error"
+// @Failure 500 {object} utils.FailureResponse "service error"
+// @Router /performance/user [post]
+func AddUser(c *gin.Context) interface{} {
+	performanceID := c.Query("performanceID")
+	if performanceID == "" {
+		panic(error2.NewHttpError(400, "40001", "performanceID null"))
+	}
+	p := new(database.Performance)
+	p.PerformanceID = performanceID
+	if err := s.DB.First(p).Error; err != nil {
+		panic(err.Error())
+	}
+	users := new([]*database.User)
+	if err := c.ShouldBindJSON(users); err != nil {
+		panic(error2.NewHttpError(400, "40001", err.Error()))
+	}
+	p.Users = *users
+	if err := s.DB.Clauses(clause.OnConflict{
+		UpdateAll: true,
+	}).Create(p).Error; err != nil {
+		panic(err.Error())
+	}
+	return "success"
 }
