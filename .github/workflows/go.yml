@@ -106,7 +106,6 @@ jobs:
           lsof -i:12309 | awk 'NR>1 {print $2}'|xargs kill -9
           nohup ./main > nohup.out 2>&1 &
           echo "reload success"
-          lsof -i:12309
 
     
     
