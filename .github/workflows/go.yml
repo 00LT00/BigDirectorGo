@@ -89,7 +89,7 @@ jobs:
         SOURCE: dist/
         TARGET: /root/BigDirectorGo
 
-  reload main:
+  reload-main:
     runs-on: ubuntu-latest
     needs: [push-to-aliyun]
     environment: ssh-deploy
