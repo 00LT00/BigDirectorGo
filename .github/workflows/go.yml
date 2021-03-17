@@ -23,6 +23,13 @@ jobs:
     - name: Get dependencies
       working-directory: .
       run:  go mod tidy
+      
+    - name: update Swagger
+      run: |
+        pwd
+        ls
+        go get -u github.com/swaggo/swag/cmd/swag
+        swag init --parseDependency -g ./cmd/main.go
 
     - name: Build
       run:  |
@@ -80,8 +87,26 @@ jobs:
     # Remote user
         REMOTE_USER: root
         SOURCE: dist/
-        TARGET: /root/github-actions
-    
+        TARGET: /root/BigDirectorGo
+
+  reload main:
+    runs-on: ubuntu-latest
+    needs: [push-to-aliyun]
+    environment: ssh-deploy
+    steps:
+    - name: multiple command
+      uses: appleboy/ssh-action@master
+      with:
+        host:  ${{secrets.SSH_HOST}}
+        username: root
+        key: ${{secrets.SSH_PRIVATE_KEY}}
+        script: |
+          ls
+          cd BigDirectorGo/
+          ls
+          lsof -i:12309 | awk 'NR>1 {print $2}'|xargs kill -9
+          nohup ./main &
+
     
     
 
