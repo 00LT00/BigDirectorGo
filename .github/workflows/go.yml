@@ -30,16 +30,19 @@ jobs:
         
     - name: Move file
       run: |
-        mkdir ../dist
-        mv main ../dist
+        mkdir ${{ github.workspace }}/dist
+        mv main ${{ github.workspace }}/dist
+        ls
+        cd ${{ github.workspace }}/dist
+        ls
         
     - name: Upload ./main to Artifact
       uses: actions/upload-artifact@v2.2.2
       with:
     # Artifact name
-          name: main
+          name: exec
     # A file, directory or wildcard pattern that describes what to upload
-          path: dist
+          path: ${{ github.workspace }}/dist/.main
     # The desired behavior if no files are found using the provided path.
       
   push-to-aliyun:
@@ -47,15 +50,18 @@ jobs:
     needs: [build]
     environment: ssh-deploy
     steps:
+    - name: mkdir
+      run: |
+        mkdir ${{ github.workspace }}/dist/
     
-    - name: Download to /dist/
+    - name: Download to ${{ github.workspace }}/dist/
       uses: actions/download-artifact@v2.0.8
       with:
     # Artifact name
-        name: main
+        name: exec
     # Destination path
-        path: dist
-        
+        path: ${{ github.workspace }}/dist/
+       
     - name: pwd
       run: |
         pwd
@@ -72,7 +78,7 @@ jobs:
         REMOTE_HOST: ${{secrets.SSH_HOST}}
     # Remote user
         REMOTE_USER: root
-        SOURCE: ../dist
+        SOURCE: ${{ github.workspace }}/dist/
         TARGET: /root/github-actions
     
     
