@@ -101,11 +101,10 @@ jobs:
         username: root
         key: ${{secrets.SSH_PRIVATE_KEY}}
         script: |
-          ls
           cd BigDirectorGo/
-          ls
+          lsof -i:12309
           lsof -i:12309 | awk 'NR>1 {print $2}'|xargs kill -9
-          nohup ./main &
+          nohup ./main > nohup.out 2>&1 &
 
     
     
