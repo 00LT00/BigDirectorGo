@@ -38,6 +38,7 @@ func init() {
 		case "windows":
 			break
 		case "linux":
+			_ = os.Chmod(filepath.Join(dir, "log"), os.ModePerm)
 			_ = os.Chmod(FilePath, os.ModePerm)
 		}
 
@@ -48,9 +49,9 @@ func init() {
 
 		//创建日志文件
 		ErrLogFile, err := os.Create(filepath.Join(FilePath, "error.log"))
-		defer ErrLogFile.Close()
+		//defer ErrLogFile.Close()
 		LogFile, err := os.Create(filepath.Join(FilePath, "info.log"))
-		defer LogFile.Close()
+		//defer LogFile.Close()
 
 		ErrLog = log.New(ErrLogFile, "[ERROR]", log.LstdFlags|log.Llongfile)
 		InfoLog = log.New(LogFile, "[INFO]", log.LstdFlags|log.Llongfile)
