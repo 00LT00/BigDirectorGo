@@ -42,6 +42,14 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "default": "token OPENID",
+                        "description": "格式为: token OPENID 这里替换成使用者的openID",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "groupID 必填",
                         "name": "groupID",
                         "in": "query",
@@ -116,6 +124,14 @@ var doc = `{
                 "operationId": "set-Group-Info",
                 "parameters": [
                     {
+                        "type": "string",
+                        "default": "token OPENID",
+                        "description": "格式为: token OPENID 这里替换成使用者的openID",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "组信息 performanceID必填, GroupID空则为新建, leaderID选填（组长的openID）",
                         "name": "process",
                         "in": "body",
@@ -183,12 +199,105 @@ var doc = `{
                 "operationId": "set-Group-Roles",
                 "parameters": [
                     {
+                        "type": "string",
+                        "default": "token OPENID",
+                        "description": "格式为: token OPENID 这里替换成使用者的openID",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "performanceID必填, groupID必填, roles是字符串数组, 只有这三个参数有意义，其余可忽略",
                         "name": "process",
                         "in": "body",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/database.Group"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "default": "spppk",
+                        "description": "check header",
+                        "name": "sign",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "40001 param error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "service error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/group/users": {
+            "post": {
+                "description": "add user to group",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "group"
+                ],
+                "summary": "添加用户到小组",
+                "operationId": "add-Group-User",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "token OPENID",
+                        "description": "格式为: token OPENID 这里替换成使用者的openID",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "groupID",
+                        "name": "groupID",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "description": "数组形式",
+                        "name": "users",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/database.User"
+                            }
                         }
                     },
                     {
@@ -246,6 +355,14 @@ var doc = `{
                 "summary": "获取演出信息",
                 "operationId": "get-Performance-Info",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "default": "token OPENID",
+                        "description": "格式为: token OPENID 这里替换成使用者的openID",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "performanceID 必填",
@@ -309,6 +426,14 @@ var doc = `{
                 "summary": "创建或更改演出信息",
                 "operationId": "set-Performance-Info",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "default": "token OPENID",
+                        "description": "格式为: token OPENID 这里替换成使用者的openID",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "演出信息，创建时ID为空, name必填",
                         "name": "performance",
@@ -374,6 +499,91 @@ var doc = `{
                 }
             }
         },
+        "/performance/users": {
+            "post": {
+                "description": "add user to performance",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "performance"
+                ],
+                "summary": "绑定用户到演出",
+                "operationId": "add-Performance-User",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "token OPENID",
+                        "description": "格式为: token OPENID 这里替换成使用者的openID",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "performanceID必填",
+                        "name": "performanceID",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "description": "数组形式",
+                        "name": "users",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/database.User"
+                            }
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "default": "spppk",
+                        "description": "check header",
+                        "name": "sign",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "40001 param error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "service error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/process/list": {
             "get": {
                 "description": "get process list",
@@ -386,6 +596,14 @@ var doc = `{
                 "summary": "获取全部环节信息",
                 "operationId": "get-Process-List",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "default": "token OPENID",
+                        "description": "格式为: token OPENID 这里替换成使用者的openID",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "performanceID 必填",
@@ -452,6 +670,14 @@ var doc = `{
                 "summary": "创建或更改环节信息，包括全部环节",
                 "operationId": "set-Process-List",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "default": "token OPENID",
+                        "description": "格式为: token OPENID 这里替换成使用者的openID",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "process结构体数组 performanceID必须一致且存在",
                         "name": "process",
@@ -521,6 +747,14 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "default": "token OPENID",
+                        "description": "格式为: token OPENID 这里替换成使用者的openID",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "openID",
                         "name": "openID",
                         "in": "query",
@@ -582,6 +816,14 @@ var doc = `{
                 "summary": "创建或更改用户信息",
                 "operationId": "set-User-Info",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "default": "token OPENID",
+                        "description": "格式为: token OPENID 这里替换成使用者的openID",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "用户的openID",
                         "name": "openID",
@@ -683,6 +925,87 @@ var doc = `{
                     },
                     "400": {
                         "description": "code null",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "service error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.FailureResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/performances": {
+            "get": {
+                "description": "get performance of user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "获取用户所有演出",
+                "operationId": "get-User-Performance",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "token OPENID",
+                        "description": "格式为: token OPENID 这里替换成使用者的openID",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "数组形式",
+                        "name": "users",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/database.Performance"
+                            }
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "default": "spppk",
+                        "description": "check header",
+                        "name": "sign",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "表演列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/database.Performance"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "40001 param error",
                         "schema": {
                             "$ref": "#/definitions/utils.FailureResponse"
                         }

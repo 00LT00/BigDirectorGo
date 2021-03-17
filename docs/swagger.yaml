@@ -108,6 +108,12 @@ paths:
       description: get group information
       operationId: get-Group-Info
       parameters:
+        - default: token OPENID
+          description: '格式为: token OPENID 这里替换成使用者的openID'
+          in: header
+          name: Authorization
+          required: true
+          type: string
         - description: groupID 必填
           in: query
           name: groupID
@@ -153,6 +159,12 @@ paths:
       description: create or update group information
       operationId: set-Group-Info
       parameters:
+        - default: token OPENID
+          description: '格式为: token OPENID 这里替换成使用者的openID'
+          in: header
+          name: Authorization
+          required: true
+          type: string
         - description: 组信息 performanceID必填, GroupID空则为新建, leaderID选填（组长的openID）
           in: body
           name: process
@@ -195,6 +207,12 @@ paths:
       description: set group roles
       operationId: set-Group-Roles
       parameters:
+        - default: token OPENID
+          description: '格式为: token OPENID 这里替换成使用者的openID'
+          in: header
+          name: Authorization
+          required: true
+          type: string
         - description: performanceID必填, groupID必填, roles是字符串数组, 只有这三个参数有意义，其余可忽略
           in: body
           name: process
@@ -230,11 +248,72 @@ paths:
       summary: 设置权限
       tags:
         - group
+  /group/users:
+    post:
+      consumes:
+        - application/json
+      description: add user to group
+      operationId: add-Group-User
+      parameters:
+        - default: token OPENID
+          description: '格式为: token OPENID 这里替换成使用者的openID'
+          in: header
+          name: Authorization
+          required: true
+          type: string
+        - description: groupID
+          in: query
+          name: groupID
+          required: true
+          type: string
+        - description: 数组形式
+          in: body
+          name: users
+          required: true
+          schema:
+            items:
+              $ref: '#/definitions/database.User'
+            type: array
+        - default: spppk
+          description: check header
+          in: header
+          name: sign
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+              - $ref: '#/definitions/utils.SuccessResponse'
+              - properties:
+                  data:
+                    type: string
+                type: object
+        "400":
+          description: 40001 param error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+        "500":
+          description: service error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+      summary: 添加用户到小组
+      tags:
+        - group
   /performance/info:
     get:
       description: get performance information
       operationId: get-Performance-Info
       parameters:
+        - default: token OPENID
+          description: '格式为: token OPENID 这里替换成使用者的openID'
+          in: header
+          name: Authorization
+          required: true
+          type: string
         - description: performanceID 必填
           in: query
           name: performanceID
@@ -275,6 +354,12 @@ paths:
       description: createPerformance or update performance information
       operationId: set-Performance-Info
       parameters:
+        - default: token OPENID
+          description: '格式为: token OPENID 这里替换成使用者的openID'
+          in: header
+          name: Authorization
+          required: true
+          type: string
         - description: 演出信息，创建时ID为空, name必填
           in: body
           name: performance
@@ -319,11 +404,72 @@ paths:
       summary: 创建或更改演出信息
       tags:
         - performance
+  /performance/users:
+    post:
+      consumes:
+        - application/json
+      description: add user to performance
+      operationId: add-Performance-User
+      parameters:
+        - default: token OPENID
+          description: '格式为: token OPENID 这里替换成使用者的openID'
+          in: header
+          name: Authorization
+          required: true
+          type: string
+        - description: performanceID必填
+          in: query
+          name: performanceID
+          required: true
+          type: string
+        - description: 数组形式
+          in: body
+          name: users
+          required: true
+          schema:
+            items:
+              $ref: '#/definitions/database.User'
+            type: array
+        - default: spppk
+          description: check header
+          in: header
+          name: sign
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+              - $ref: '#/definitions/utils.SuccessResponse'
+              - properties:
+                  data:
+                    type: string
+                type: object
+        "400":
+          description: 40001 param error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+        "500":
+          description: service error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+      summary: 绑定用户到演出
+      tags:
+        - performance
   /process/list:
     get:
       description: get process list
       operationId: get-Process-List
       parameters:
+        - default: token OPENID
+          description: '格式为: token OPENID 这里替换成使用者的openID'
+          in: header
+          name: Authorization
+          required: true
+          type: string
         - description: performanceID 必填
           in: query
           name: performanceID
@@ -366,6 +512,12 @@ paths:
       description: create or update process list
       operationId: set-Process-List
       parameters:
+        - default: token OPENID
+          description: '格式为: token OPENID 这里替换成使用者的openID'
+          in: header
+          name: Authorization
+          required: true
+          type: string
         - description: process结构体数组 performanceID必须一致且存在
           in: body
           name: process
@@ -408,6 +560,12 @@ paths:
       description: get user information by openID
       operationId: get-User-Info
       parameters:
+        - default: token OPENID
+          description: '格式为: token OPENID 这里替换成使用者的openID'
+          in: header
+          name: Authorization
+          required: true
+          type: string
         - description: openID
           in: query
           name: openID
@@ -448,6 +606,12 @@ paths:
       description: create or update user information
       operationId: set-User-Info
       parameters:
+        - default: token OPENID
+          description: '格式为: token OPENID 这里替换成使用者的openID'
+          in: header
+          name: Authorization
+          required: true
+          type: string
         - description: 用户的openID
           in: body
           name: openID
@@ -521,5 +685,57 @@ paths:
             $ref: '#/definitions/utils.FailureResponse'
       summary: 获取openID
       tags:
-      - user
+        - user
+  /user/performances:
+    get:
+      consumes:
+        - application/json
+      description: get performance of user
+      operationId: get-User-Performance
+      parameters:
+        - default: token OPENID
+          description: '格式为: token OPENID 这里替换成使用者的openID'
+          in: header
+          name: Authorization
+          required: true
+          type: string
+        - description: 数组形式
+          in: body
+          name: users
+          required: true
+          schema:
+            items:
+              $ref: '#/definitions/database.Performance'
+            type: array
+        - default: spppk
+          description: check header
+          in: header
+          name: sign
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: 表演列表
+          schema:
+            allOf:
+              - $ref: '#/definitions/utils.SuccessResponse'
+              - properties:
+                  data:
+                    items:
+                      $ref: '#/definitions/database.Performance'
+                    type: array
+                type: object
+        "400":
+          description: 40001 param error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+        "500":
+          description: service error
+          schema:
+            $ref: '#/definitions/utils.FailureResponse'
+      summary: 获取用户所有演出
+      tags:
+        - user
 swagger: "2.0"
