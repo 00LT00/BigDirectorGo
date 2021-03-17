@@ -18,6 +18,7 @@ var s = service.Service
 // @ID set-Group-Info
 // @Accept json
 // @Produce  json
+// @Param Authorization header string true "格式为: token OPENID 这里替换成使用者的openID" default(token OPENID)
 // @Param process body database.Group true "组信息 performanceID必填, GroupID空则为新建, leaderID选填（组长的openID）"
 // @Param sign header string true "check header" default(spppk)
 // @Success 200 {object} utils.SuccessResponse{data=string} "GroupID"
@@ -84,6 +85,7 @@ func updatePolicy(g *database.Group) error {
 // @Description get group information
 // @ID get-Group-Info
 // @Produce  json
+// @Param Authorization header string true "格式为: token OPENID 这里替换成使用者的openID" default(token OPENID)
 // @Param groupID query string true "groupID 必填"
 // @Param sign header string true "check header" default(spppk)
 // @Success 200 {object} utils.SuccessResponse{data=database.Group{Leader=database.User}} "小组详情，其中roles是权限"
@@ -116,6 +118,7 @@ func GetInfo(c *gin.Context) interface{} {
 // @ID set-Group-Roles
 // @Accept json
 // @Produce  json
+// @Param Authorization header string true "格式为: token OPENID 这里替换成使用者的openID" default(token OPENID)
 // @Param process body database.Group true "performanceID必填, groupID必填, roles是字符串数组, 只有这三个参数有意义，其余可忽略"
 // @Param sign header string true "check header" default(spppk)
 // @Success 200 {object} utils.SuccessResponse{data=string} "success"
@@ -140,6 +143,7 @@ func SetRoles(c *gin.Context) interface{} {
 // @ID add-Group-User
 // @Accept json
 // @Produce  json
+// @Param Authorization header string true "格式为: token OPENID 这里替换成使用者的openID" default(token OPENID)
 // @Param groupID query string true "groupID"
 // @Param users body []database.User true "数组形式"
 // @Param sign header string true "check header" default(spppk)

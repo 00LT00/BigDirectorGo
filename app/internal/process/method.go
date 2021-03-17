@@ -18,6 +18,7 @@ var s = service.Service
 // @ID set-Process-List
 // @Accept json
 // @Produce  json
+// @Param Authorization header string true "格式为: token OPENID 这里替换成使用者的openID" default(token OPENID)
 // @Param process body []database.Process true "process结构体数组 performanceID必须一致且存在"
 // @Param sign header string true "check header" default(spppk)
 // @Success 200 {object} utils.SuccessResponse{data=string} "success"
@@ -57,6 +58,7 @@ func SetList(c *gin.Context) interface{} {
 // @Description get process list
 // @ID get-Process-List
 // @Produce  json
+// @Param Authorization header string true "格式为: token OPENID 这里替换成使用者的openID" default(token OPENID)
 // @Param performanceID query string true "performanceID 必填"
 // @Param sign header string true "check header" default(spppk)
 // @Success 200 {object} utils.SuccessResponse{data=[]database.Process} "环节列表"

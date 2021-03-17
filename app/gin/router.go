@@ -15,11 +15,13 @@ func initRouter(r *gin.Engine) {
 		//获取openID
 		userR.GET("/openID", f(user.OpenID))
 		//更新用户详情
-		userR.PUT("/info", f(user.SetInfo))
+		userR.PUT("/info", GetOpenID, f(user.SetInfo))
 		//获取用户信息
-		userR.GET("/info", f(user.GetInfo))
+		userR.GET("/info", GetOpenID, f(user.GetInfo))
+		//获取用户所有演出
+		userR.GET("/performances", GetOpenID, f(user.GetPerformances))
 	}
-	performanceR := r.Group("/performance")
+	performanceR := r.Group("/performance", GetOpenID)
 	{
 		//更新演出信息
 		performanceR.PUT("/info", f(performance.SetInfo))
@@ -28,7 +30,7 @@ func initRouter(r *gin.Engine) {
 		//添加用户到演出
 		performanceR.POST("/user", f(performance.AddUser))
 	}
-	groupR := r.Group("/group")
+	groupR := r.Group("/group", GetOpenID)
 	{
 		//创建小组
 		groupR.PUT("/info", f(group.SetInfo))
@@ -39,7 +41,7 @@ func initRouter(r *gin.Engine) {
 		//添加成员
 		groupR.POST("/users", f(group.AddUser))
 	}
-	processR := r.Group("/process")
+	processR := r.Group("/process", GetOpenID)
 	{
 		//设置环节列表
 		processR.PUT("/list", f(process.SetList))

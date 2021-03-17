@@ -37,6 +37,7 @@ func OpenID(c *gin.Context) interface{} {
 // @ID set-User-Info
 // @Accept json
 // @Produce  json
+// @Param Authorization header string true "格式为: token OPENID 这里替换成使用者的openID" default(token OPENID)
 // @Param openID body database.User true "用户的openID"
 // @Param sign header string true "check header" default(spppk)
 // @Success 200 {object} utils.SuccessResponse{data=string} "success"
@@ -63,6 +64,7 @@ func SetInfo(c *gin.Context) interface{} {
 // @Description get user information by openID
 // @ID get-User-Info
 // @Produce  json
+// @Param Authorization header string true "格式为: token OPENID 这里替换成使用者的openID" default(token OPENID)
 // @Param openID query string true "openID"
 // @Param sign header string true "check header" default(spppk)
 // @Success 200 {object} utils.SuccessResponse{data=database.User} "UserInfo"
@@ -80,4 +82,31 @@ func GetInfo(c *gin.Context) interface{} {
 		panic(err.Error())
 	}
 	return u
+}
+
+// 获取用户演出
+// @Tags user
+// @Summary 获取用户所有演出
+// @Description get performance of user
+// @ID get-User-Performance
+// @Accept json
+// @Produce  json
+// @Param Authorization header string true "格式为: token OPENID 这里替换成使用者的openID" default(token OPENID)
+// @Param users body []database.Performance true "数组形式"
+// @Param sign header string true "check header" default(spppk)
+// @Success 200 {object} utils.SuccessResponse{data=[]database.Performance} "表演列表"
+// @Failure 400 {object} utils.FailureResponse "40001 param error"
+// @Failure 500 {object} utils.FailureResponse "service error"
+// @Router /user/performances [get]
+func GetPerformances(c *gin.Context) interface{} {
+	openID, isExist := c.Get("openID")
+	if !isExist {
+		panic(error2.NewHttpError(403, "40301", "forbidden"))
+	}
+	u := new(database.User)
+	u.OpenID = openID.(string)
+	if err := db.Preload("Performances").First(u).Error; err != nil {
+		panic(err.Error())
+	}
+	return u.Performances
 }

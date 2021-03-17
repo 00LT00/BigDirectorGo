@@ -29,3 +29,13 @@ func HttpRecover(c *gin.Context) {
 	}()
 	c.Next()
 }
+
+func GetOpenID(c *gin.Context) {
+	if auth := c.GetHeader("Authorization"); auth != "" {
+		if len(auth) > 6 {
+			token := auth[6:]
+			c.Set("openID", token)
+		}
+	}
+	c.Next()
+}

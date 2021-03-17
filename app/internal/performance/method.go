@@ -18,6 +18,7 @@ var s = service.Service
 // @ID set-Performance-Info
 // @Accept json
 // @Produce  json
+// @Param Authorization header string true "格式为: token OPENID 这里替换成使用者的openID" default(token OPENID)
 // @Param performance body database.Performance true "演出信息，创建时ID为空, name必填"
 // @Param openID query string true "创建人或者导演组一员的openID 必填"
 // @Param sign header string true "check header" default(spppk)
@@ -101,6 +102,7 @@ func createPerformance(p *database.Performance, u *database.User) {
 // @Description get performance information
 // @ID get-Performance-Info
 // @Produce  json
+// @Param Authorization header string true "格式为: token OPENID 这里替换成使用者的openID" default(token OPENID)
 // @Param performanceID query string true "performanceID 必填"
 // @Param sign header string true "check header" default(spppk)
 // @Success 200 {object} utils.SuccessResponse{data=database.Performance} "演出详情"
@@ -127,6 +129,7 @@ func GetInfo(c *gin.Context) interface{} {
 // @ID add-Performance-User
 // @Accept json
 // @Produce  json
+// @Param Authorization header string true "格式为: token OPENID 这里替换成使用者的openID" default(token OPENID)
 // @Param performanceID query string true "performanceID必填"
 // @Param users body []database.User true "数组形式"
 // @Param sign header string true "check header" default(spppk)
