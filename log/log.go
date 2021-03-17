@@ -6,15 +6,19 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"runtime"
 	"strconv"
+	"syscall"
 	"time"
 )
 
 var (
 	ErrLog  *log.Logger
 	InfoLog *log.Logger
+	Sig     chan os.Signal
+	Exit    chan int
 	//开发模式
 	Mode = flag.Bool("mode", false, "dev mode")
 )
@@ -49,9 +53,20 @@ func init() {
 
 		//创建日志文件
 		ErrLogFile, err := os.Create(filepath.Join(FilePath, "error.log"))
-		//defer ErrLogFile.Close()
 		LogFile, err := os.Create(filepath.Join(FilePath, "info.log"))
-		//defer LogFile.Close()
+		Sig = make(chan os.Signal)
+		Exit = make(chan int)
+		signal.Notify(Sig, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
+		defer func() {
+			go func() {
+				<-Sig
+				ErrLog.Println("ErrLogger exit")
+				InfoLog.Println("InfoLogger exit")
+				ErrLogFile.Close()
+				LogFile.Close()
+				Exit <- 0
+			}()
+		}()
 
 		ErrLog = log.New(ErrLogFile, "[ERROR]", log.LstdFlags|log.Llongfile)
 		InfoLog = log.New(LogFile, "[INFO]", log.LstdFlags|log.Llongfile)

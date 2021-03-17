@@ -3,9 +3,10 @@ package main
 import (
 	"BigDirector/app"
 	_ "BigDirector/error"
-	_ "BigDirector/log"
+	logger "BigDirector/log"
 	_ "BigDirector/service"
 	_ "BigDirector/utils"
+	"os"
 )
 
 // @title BigDirector API
@@ -22,4 +23,6 @@ func main() {
 
 	app.Register()
 	app.Run()
+	code := <-logger.Exit
+	os.Exit(code)
 }
