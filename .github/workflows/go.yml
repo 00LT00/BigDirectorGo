@@ -79,7 +79,7 @@ jobs:
         REMOTE_HOST: ${{secrets.SSH_HOST}}
     # Remote user
         REMOTE_USER: root
-        SOURCE: ${{ github.workspace }}/dist/
+        SOURCE: dist/
         TARGET: /root/github-actions
     
     
