@@ -44,7 +44,7 @@ jobs:
     # Private Key
         SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
     # Remote host
-        REMOTE_HOST: ${{SSH_HOST}}
+        REMOTE_HOST: ${{secrets.SSH_HOST}}
     # Remote user
         REMOTE_USER: root
         SOURCE: ../dist
