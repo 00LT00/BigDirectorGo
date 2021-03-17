@@ -26,7 +26,7 @@ jobs:
 
     - name: Build
       run:  |
-        go build ./cmd/main.go -o main
+        go build -o main ./cmd/main.go
         
     - name: Move file
       run: |
