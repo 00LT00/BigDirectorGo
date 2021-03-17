@@ -34,6 +34,7 @@ jobs:
         mv main ${{ github.workspace }}/dist
         ls
         cd ${{ github.workspace }}/dist
+        pwd
         ls
         
     - name: Upload ./main to Artifact
@@ -42,7 +43,7 @@ jobs:
     # Artifact name
           name: exec
     # A file, directory or wildcard pattern that describes what to upload
-          path: ${{ github.workspace }}/dist/.main
+          path: ${{ github.workspace }}/dist/main
     # The desired behavior if no files are found using the provided path.
       
   push-to-aliyun:
