@@ -1,0 +1,55 @@
+name: Go
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    environment: aliyun
+    env:
+      WX_APPID: ${{ secrets.WX_APPID }}
+      WX_APPSECRET: ${{ secrets.WX_APPSECRET }}
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.15
+      
+    - name: Get dependencies
+      working-directory: .
+      run:  go mod tidy
+
+    - name: Build
+      run:  |
+        go build ./cmd/main.go -o main
+        
+    - name: Move file
+      run: |
+        mkdir ../dist
+        mv main ../dist
+      
+  push-to-aliyun:
+    runs-on: ubuntu-latest
+    needs: [build]
+    environment: ssh
+    steps:
+    - name: ssh deploy
+      uses: easingthemes/ssh-deploy@v2.1.5
+      with:
+    # Private Key
+        SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+    # Remote host
+        REMOTE_HOST: ${{SSH_HOST}}
+    # Remote user
+        REMOTE_USER: root
+        SOURCE: ../dist
+        TARGET: /root/github-actions
+    
+    
+    
+
