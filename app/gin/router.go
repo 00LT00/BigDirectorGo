@@ -36,6 +36,8 @@ func initRouter(r *gin.Engine) {
 		groupR.GET("/info", f(group.GetInfo))
 		//设置权限（roles）
 		groupR.PUT("/roles", f(group.SetRoles))
+		//添加成员
+		groupR.POST("/users", f(group.AddUser))
 	}
 	processR := r.Group("/process")
 	{

@@ -127,13 +127,13 @@ func GetInfo(c *gin.Context) interface{} {
 // @ID add-Performance-User
 // @Accept json
 // @Produce  json
-// @Param performance query string true "performanceID必填"
+// @Param performanceID query string true "performanceID必填"
 // @Param users body []database.User true "数组形式"
 // @Param sign header string true "check header" default(spppk)
 // @Success 200 {object} utils.SuccessResponse{data=string} "success"
 // @Failure 400 {object} utils.FailureResponse "40001 param error"
 // @Failure 500 {object} utils.FailureResponse "service error"
-// @Router /performance/user [post]
+// @Router /performance/users [post]
 func AddUser(c *gin.Context) interface{} {
 	performanceID := c.Query("performanceID")
 	if performanceID == "" {
@@ -148,7 +148,7 @@ func AddUser(c *gin.Context) interface{} {
 	if err := c.ShouldBindJSON(users); err != nil {
 		panic(error2.NewHttpError(400, "40001", err.Error()))
 	}
-	p.Users = *users
+	p.Users = append(p.Users, *users...)
 	if err := s.DB.Clauses(clause.OnConflict{
 		UpdateAll: true,
 	}).Create(p).Error; err != nil {

@@ -132,3 +132,49 @@ func SetRoles(c *gin.Context) interface{} {
 	}
 	return "success"
 }
+
+// 添加用户到小组
+// @Tags group
+// @Summary 添加用户到小组
+// @Description add user to group
+// @ID add-Group-User
+// @Accept json
+// @Produce  json
+// @Param groupID query string true "groupID"
+// @Param users body []database.User true "数组形式"
+// @Param sign header string true "check header" default(spppk)
+// @Success 200 {object} utils.SuccessResponse{data=string} "success"
+// @Failure 400 {object} utils.FailureResponse "40001 param error"
+// @Failure 500 {object} utils.FailureResponse "service error"
+// @Router /group/users [post]
+func AddUser(c *gin.Context) interface{} {
+	groupID := c.Query("groupID")
+	if groupID == "" {
+		panic(error2.NewHttpError(400, "40001", "groupID null"))
+	}
+	g := new(database.Group)
+	g.GroupID = groupID
+	if err := s.DB.First(g).Error; err != nil {
+		panic(err.Error())
+	}
+	users := new([]*database.User)
+	if err := c.ShouldBindJSON(users); err != nil {
+		panic(error2.NewHttpError(400, "40001", err.Error()))
+	}
+	g.Users = append(g.Users, *users...)
+	tx := s.DB.Begin()
+	if err := tx.Clauses(clause.OnConflict{
+		UpdateAll: true,
+	}).Create(g).Error; err != nil {
+		tx.Rollback()
+		panic(err.Error())
+	}
+	for _, user := range *users {
+		if _, err := s.Casbin.AddRoleForUserInDomain(user.OpenID, g.GroupID, g.PerformanceID); err != nil {
+			tx.Rollback()
+			panic(err.Error())
+		}
+	}
+	tx.Commit()
+	return "success"
+}
