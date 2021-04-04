@@ -5,7 +5,7 @@ key="spppk"
 Addr = "localhost"
 User = "director"
 Pass = "akdbJnaKApJfxsrd"
-DBName = "bigdirector"
+DBName = "bigdirector-temp"
 [DBDev]
 Addr = "localhost"
 User = "root"
