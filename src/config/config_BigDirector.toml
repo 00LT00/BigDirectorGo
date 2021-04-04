@@ -3,9 +3,9 @@ Port=":12307"
 key="spppk"
 [DB]
 Addr = "localhost"
-User = "director"
+User = "bigdirector_temp"
 Pass = "akdbJnaKApJfxsrd"
-DBName = "bigdirector-temp"
+DBName = "bigdirector_temp"
 [DBDev]
 Addr = "localhost"
 User = "root"
